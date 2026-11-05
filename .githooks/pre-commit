@@ -1,0 +1,24 @@
+#!/bin/sh
+# Runs lint/type/build checks for whichever side (backend/frontend) has staged changes.
+# Checks run against the working tree, so keep unstaged edits out of the way (git stash -k).
+root=$(git rev-parse --show-toplevel) || exit 1
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+fail() { echo "pre-commit: FAILED at '$1'. Fix it and commit again." >&2; exit 1; }
+run() { label=$1; shift; echo "pre-commit: $label"; "$@" || fail "$label"; }
+
+if echo "$staged" | grep -q '^backend/'; then
+  cd "$root/backend" || exit 1
+  for d in .venv/Scripts .venv/bin; do [ -d "$d" ] && PATH="$PWD/$d:$PATH"; done
+  command -v ruff >/dev/null || fail "ruff not found (create backend/.venv and pip install -e .[dev])"
+  run "backend: ruff check" ruff check .
+  run "backend: ruff format --check" ruff format --check .
+  run "backend: pyright" pyright
+fi
+
+if echo "$staged" | grep -q '^frontend/'; then
+  cd "$root/frontend" || exit 1
+  [ -d node_modules ] || fail "frontend deps missing (run: cd frontend && npm ci)"
+  run "frontend: eslint" npm run lint --silent
+  run "frontend: tsc + vite build" npm run build --silent
+fi
+echo "pre-commit: all checks passed"

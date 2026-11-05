@@ -1,0 +1,15 @@
+#!/bin/sh
+# Conventional Commits: type(scope)?!?: subject
+subject=$(grep -v '^#' "$1" | head -n 1)
+case "$subject" in Merge\ *|Revert\ *|fixup!\ *|squash!\ *) exit 0 ;; esac
+if ! echo "$subject" | grep -Eq '^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-z0-9._/-]+\))?!?: .+'; then
+  cat >&2 <<MSG
+commit-msg: invalid commit message:
+  $subject
+Expected: <type>(<optional scope>): <subject>
+Types: feat fix docs style refactor perf test build ci chore revert
+Example: feat(api): add task cancel endpoint
+MSG
+  exit 1
+fi
+if [ ${#subject} -gt 100 ]; then echo "commit-msg: subject is over 100 characters" >&2; exit 1; fi

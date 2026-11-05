@@ -1,0 +1,58 @@
+[project]
+name = "harnix"
+version = "0.1.0"
+description = "Harnix: The Self-Verifying Autonomous AI Coding Harness & Spec Intelligence Engine"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn>=0.30",
+  "pydantic>=2.7",
+  "pydantic-settings>=2.3",
+  "sqlalchemy>=2.0",
+  "alembic>=1.13",
+  "anthropic>=1.0",
+  "openai>=1.60",
+  "neo4j>=5.20",
+  "httpx>=0.27",
+]
+
+[project.scripts]
+harnix = "harnix.cli:main"
+forge = "harnix.cli:main"
+
+[project.optional-dependencies]
+postgres = ["psycopg[binary]>=3.1"]
+dev = ["pytest>=8", "pytest-timeout", "httpx2", "ruff", "pyright"]  # httpx2: TestClient transport + mock SDK transport
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["harnix*", "forge*"]
+
+[tool.setuptools.package-data]
+"harnix.knowledge" = ["ontology.json"]
+"forge.knowledge" = ["ontology.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+timeout = 120
+addopts = "-q"
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+extend-exclude = ["migrations", "harnix/evaluations/cases", ".harnix", ".forge"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["E501"]
+
+[tool.pyright]
+include = ["harnix"]
+exclude = ["harnix/evaluations/cases"]
+pythonVersion = "3.11"
+typeCheckingMode = "standard"
+venvPath = "."
+venv = ".venv"

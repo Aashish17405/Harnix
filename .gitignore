@@ -1,0 +1,39 @@
+# secrets and runtime data
+.env
+.env.*
+!.env.example
+*.db
+*.db-wal
+*.db-shm
+.harnix/
+harnix-eval-*/
+.forge/
+forge-eval-*/
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+build/
+
+# node
+node_modules/
+dist/
+coverage/
+vscode-extension/out/
+.vscode-test/
+*.vsix
+
+# editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+opencode/
+*.tsbuildinfo

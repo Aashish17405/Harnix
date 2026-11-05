@@ -1,0 +1,2357 @@
+{
+  "schema_version": "1.0",
+  "document_info": {
+    "product": "Virtual Account - Account Management (C.1.5)",
+    "platform": "VCB Corporate Digital Banking Platform",
+    "source_brd": "BRD Account Services - Virtual Account (1).md",
+    "channels": "Web, Mobile",
+    "targeted_users": "Corporate users (Maker, Checker, Approver, Viewer) of existing Corporate DigiBank clients",
+    "generated_date": "2026-10-28",
+    "generated_by": "Claude (okf-kiro) following the Kiro backlog template - not produced by the Kiro harness"
+  },
+  "user_stories": [
+    {
+      "story_id": "US-001",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-001",
+      "traces": [
+        "ITEM-001"
+      ],
+      "title": "View entitled CIF and its accounts in a single-CIF summary",
+      "description": "As a Corporate User, I want to see the CIF I am entitled to view together with the relevant virtual accounts under it, so that I get an immediate overview of my company's virtual account position when I open the module.",
+      "priority": "Highest",
+      "dependencies": "Relies on the Corporate Banking System for CIF, virtual account data and the configured entitlements.",
+      "business_validation_rules": "The user must be onboarded, hold the virtual account inquiry entitlement and have a current account with a linked virtual account. Only the CIF and accounts the user is entitled to are displayed.",
+      "business_validation_rule_ids": [
+        "V-1",
+        "V-2"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN an authenticated Corporate User entitled to a single CIF WHEN the user opens the Virtual Account module THEN the system displays the aggregated summary for that CIF with the virtual accounts the user is entitled to view",
+        "GIVEN the aggregated summary is displayed WHEN the user reviews the entity information THEN the system shows the CIF number and corporate name of the entitled entity",
+        "GIVEN the user is entitled to only some virtual accounts under the CIF WHEN the summary loads THEN the system shows only those entitled accounts and excludes all others",
+        "GIVEN a Corporate User without the virtual account inquiry entitlement WHEN the user attempts to open the module THEN the system denies access and displays a no-access message",
+        "GIVEN the Corporate Banking System is unavailable WHEN the user opens the module THEN the system displays a service-unavailable message instead of an empty or zero summary"
+      ],
+      "additional_scenarios": [
+        "GIVEN an entitled Corporate User whose current account has no linked virtual account WHEN the user opens the module THEN the system displays a message that no virtual accounts are linked",
+        "GIVEN the same Corporate User signs in on Web and on Mobile WHEN the summary is displayed on each channel THEN both channels show the same entitled CIF and accounts",
+        "GIVEN the user opens the aggregated summary WHEN the page is served THEN the access is recorded in the audit trail with user identity and timestamp"
+      ],
+      "ears_requirements": [
+        "When an entitled Corporate User with a single CIF opens the Virtual Account module, the system shall display the aggregated summary for that CIF with the user's entitled virtual accounts.",
+        "The system shall display the CIF number and corporate name of the entitled entity in the aggregated summary.",
+        "The system shall exclude from the aggregated summary every virtual account the user is not entitled to view.",
+        "If a user without the virtual account inquiry entitlement opens the module, then the system shall deny access and display a no-access message.",
+        "If the Corporate Banking System is unavailable, then the system shall display a service-unavailable message and shall not present an empty or zero summary."
+      ],
+      "brd_reference": "BF-AS-VA-01 (Aggregated Summary of Accounts); Sections 3.1, 3.2.1, 5.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": []
+    },
+    {
+      "story_id": "US-002",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-001",
+      "traces": [
+        "ITEM-002"
+      ],
+      "title": "View virtual accounts across all entitled entities (multi-CIF)",
+      "description": "As a Corporate User, I want to view virtual account lists across all the entities I am entitled to, so that I can monitor group-wide collections from one place when my company operates under several CIFs.",
+      "priority": "High",
+      "dependencies": "Builds on the single-CIF summary in US-001. Relies on the Corporate Banking System for the CIF group and entitlements.",
+      "business_validation_rules": "All CIFs shown must be CIFs the user is entitled to; virtual accounts are included only where the user holds the entitlement.",
+      "business_validation_rule_ids": [
+        "V-1"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN an authenticated Corporate User entitled to several CIFs WHEN the user opens the aggregated summary THEN the system offers an option to view virtual accounts across all entitled entities",
+        "GIVEN the user selects the all-entities option WHEN the summary refreshes THEN the system shows the virtual accounts of every entitled CIF in one consolidated view",
+        "GIVEN the consolidated view is displayed WHEN the user reviews an account THEN the system identifies the CIF to which each virtual account belongs",
+        "GIVEN the corporate group has a CIF the user is not entitled to WHEN the all-entities view loads THEN the system excludes that CIF and its virtual accounts",
+        "GIVEN data for one entitled CIF cannot be retrieved WHEN the all-entities view loads THEN the system shows the available CIFs and states that data for the affected CIF is not available"
+      ],
+      "additional_scenarios": [
+        "GIVEN a user entitled to only one CIF WHEN the summary loads THEN the system does not show the multi-CIF option and behaves as in the single-CIF scenario",
+        "GIVEN two entitled CIFs share the same current account name WHEN the consolidated view is displayed THEN the CIF number distinguishes their accounts",
+        "GIVEN the user switches to the all-entities view WHEN the view is displayed THEN the access is recorded in the audit trail"
+      ],
+      "ears_requirements": [
+        "When a Corporate User entitled to more than one CIF opens the aggregated summary, the system shall offer an option to view virtual accounts across all entitled entities.",
+        "When the all-entities option is selected, the system shall display the virtual accounts of every entitled CIF in one consolidated view.",
+        "The system shall identify the CIF of each virtual account in the consolidated view.",
+        "The system shall exclude from the consolidated view every CIF and virtual account the user is not entitled to.",
+        "If data for an entitled CIF cannot be retrieved, then the system shall display the remaining CIFs and indicate that data for the affected CIF is not available."
+      ],
+      "brd_reference": "BF-AS-VA-01 (Aggregated Summary of Accounts); Sections 3.2.1, 5.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-001",
+          "reason": "the single-CIF summary and entitlement scoping must exist before it is extended across CIFs",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-003",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-001",
+      "traces": [
+        "ITEM-003"
+      ],
+      "title": "Select specific entities to scope the summary",
+      "description": "As a Corporate User, I want to select specific entities from a list of my entitled CIFs, so that I can focus the summary on the subsidiaries or business units I am responsible for.",
+      "priority": "High",
+      "dependencies": "Builds on the multi-CIF view in US-002.",
+      "business_validation_rules": "The selection list contains only CIFs the user is entitled to; at least one entity must be selected.",
+      "business_validation_rule_ids": [
+        "V-1"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a Corporate User entitled to several CIFs WHEN the user opens entity selection THEN the system lists only the CIFs the user is entitled to",
+        "GIVEN the entity list is open WHEN the user selects one or more entities and confirms THEN the summary, counts and hierarchy show only the selected entities",
+        "GIVEN entities are selected WHEN the user navigates to the account list THEN the account list is scoped to the same selected entities",
+        "GIVEN the entity list is open WHEN the user deselects all entities THEN the system prevents confirmation and asks the user to select at least one entity",
+        "GIVEN the entity list cannot be loaded WHEN the user opens entity selection THEN the system displays a service-unavailable message and keeps the current selection"
+      ],
+      "additional_scenarios": [
+        "GIVEN the user previously selected specific entities WHEN the user chooses the all-entities option THEN the selection is cleared and all entitled entities are shown",
+        "GIVEN an entity's entitlement is removed during the session WHEN the summary is refreshed THEN that entity is removed from the selection and its accounts are no longer shown",
+        "GIVEN a long list of entitled CIFs WHEN the user types part of a CIF number or name in the selector THEN the list narrows to matching entitled CIFs"
+      ],
+      "ears_requirements": [
+        "When a multi-CIF Corporate User opens entity selection, the system shall list only the CIFs the user is entitled to.",
+        "When the user confirms a selection of entities, the system shall scope the summary, counts and hierarchy to the selected entities.",
+        "While an entity selection is active, the system shall apply the same selection to the virtual account list.",
+        "If the user attempts to confirm an empty entity selection, then the system shall prevent confirmation and request at least one entity.",
+        "If the entity list cannot be loaded, then the system shall display a service-unavailable message and retain the current selection."
+      ],
+      "brd_reference": "BF-AS-VA-01 (Aggregated Summary of Accounts); Sections 3.2.1, 5.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-002",
+          "reason": "entity selection narrows the multi-CIF consolidated view",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-004",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-001",
+      "traces": [
+        "ITEM-004"
+      ],
+      "title": "View the virtual account hierarchy per entitlement",
+      "description": "As a Corporate User, I want to see the hierarchy from Current Account to Root VA, Parent VA and Virtual Account as per my entitlement, so that I understand how my collection identifiers are structured under each physical account.",
+      "priority": "High",
+      "dependencies": "Relies on the Corporate Banking System for the VA hierarchy and the hierarchy-level entitlements.",
+      "business_validation_rules": "Permissions are managed by Current Account, Root VA, Parent VA or VA number; the hierarchy shows only nodes the user is entitled to.",
+      "business_validation_rule_ids": [
+        "V-1"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN an entitled Corporate User on the aggregated summary WHEN the user opens the hierarchy view THEN the system shows the levels Current Account, Root VA, Parent VA and Virtual Account",
+        "GIVEN the hierarchy view is displayed WHEN the user expands a Current Account node THEN the system shows its Root VAs, then their Parent VAs, then the Virtual Accounts beneath them",
+        "GIVEN the user is entitled at Parent VA level only WHEN the hierarchy loads THEN the system shows that Parent VA and its entitled Virtual Accounts and does not expose sibling branches",
+        "GIVEN a user entitled to individual VAs only WHEN the hierarchy loads THEN the system shows only the paths leading to those VAs without revealing other VAs under the same parents",
+        "GIVEN the hierarchy cannot be retrieved WHEN the user opens the hierarchy view THEN the system displays a data-not-available message"
+      ],
+      "additional_scenarios": [
+        "GIVEN a Closed virtual account within the 12-month visibility window WHEN the hierarchy is displayed THEN the account appears with its Closed status",
+        "GIVEN a hierarchy with many virtual accounts WHEN the user expands a node THEN child nodes load without requiring the full hierarchy to be loaded at once",
+        "GIVEN the user selects a Virtual Account node WHEN the user clicks it THEN the system opens that account's details"
+      ],
+      "ears_requirements": [
+        "The system shall display the virtual account hierarchy at the levels Current Account, Root VA, Parent VA and Virtual Account.",
+        "When the user expands a hierarchy node, the system shall display the entitled child nodes of the next level.",
+        "The system shall display only the hierarchy nodes and paths permitted by the user's Current Account, Root VA, Parent VA or VA entitlement.",
+        "The system shall not reveal virtual accounts outside the user's entitlement through the hierarchy view.",
+        "If the hierarchy cannot be retrieved, then the system shall display a data-not-available message."
+      ],
+      "brd_reference": "BF-AS-VA-01 (Aggregated Summary of Accounts); Sections 5.1, 5.2",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-001",
+          "reason": "the hierarchy is part of the aggregated summary",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-005",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-001",
+      "traces": [
+        "ITEM-005"
+      ],
+      "title": "See VA counts per Parent VA, per Current Account and in total",
+      "description": "As a Corporate User, I want to see the number of virtual accounts linked to each Parent VA, to each Current Account and in total, so that I can gauge the size of my collection structure at a glance.",
+      "priority": "Medium",
+      "dependencies": "Uses the entitled hierarchy from US-004.",
+      "business_validation_rules": "Counts include only entitled virtual accounts and respect the current entity selection.",
+      "business_validation_rule_ids": [
+        "V-1",
+        "V-21"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN an entitled Corporate User on the aggregated summary WHEN the summary loads THEN the system shows the total number of virtual accounts the user is entitled to",
+        "GIVEN the summary is displayed WHEN the user views a Current Account THEN the system shows the number of virtual accounts linked to that Current Account",
+        "GIVEN the summary is displayed WHEN the user views a Parent VA THEN the system shows the number of virtual accounts linked to that Parent VA",
+        "GIVEN the user is entitled to only part of a Parent VA's accounts WHEN the counts are shown THEN the counts reflect only the entitled accounts",
+        "GIVEN the account data cannot be retrieved WHEN the summary loads THEN the system displays the counts as not available instead of zero"
+      ],
+      "additional_scenarios": [
+        "GIVEN the user has selected specific entities WHEN the counts are displayed THEN the counts cover only the selected entities",
+        "GIVEN Closed accounts within the 12-month window exist WHEN the counts are displayed THEN the system indicates whether Closed accounts are included in the count",
+        "GIVEN a Current Account with no linked virtual accounts WHEN the counts are displayed THEN its count is shown as zero"
+      ],
+      "ears_requirements": [
+        "The system shall display the total number of virtual accounts the user is entitled to.",
+        "The system shall display the number of entitled virtual accounts linked to each Current Account.",
+        "The system shall display the number of entitled virtual accounts linked to each Parent VA.",
+        "While an entity selection is active, the system shall compute the counts over the selected entities only.",
+        "If account data cannot be retrieved, then the system shall show the counts as not available rather than zero."
+      ],
+      "brd_reference": "BF-AS-VA-01 (Aggregated Summary of Accounts); Section 5.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-004",
+          "reason": "counts are computed over the entitled hierarchy",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-006",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-001",
+      "traces": [
+        "ITEM-006"
+      ],
+      "title": "View consolidated inflow across entitled virtual accounts",
+      "description": "As a Corporate User, I want to see a consolidated inflow view across my entitled virtual accounts, so that I know how much has been collected without opening each account.",
+      "priority": "Medium",
+      "dependencies": "Relies on the Corporate Banking System for real-time credit data. Uses the same inflow definition as the account details inflow measures.",
+      "business_validation_rules": "The consolidated inflow covers only entitled virtual accounts and is labelled as an inflow measure, not as the physical account balance.",
+      "business_validation_rule_ids": [
+        "V-1",
+        "V-22"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN an entitled Corporate User on the aggregated summary WHEN the summary loads THEN the system shows the consolidated inflow across the entitled virtual accounts",
+        "GIVEN the consolidated inflow is displayed WHEN the user reviews it THEN the system shows the amount with its currency and the date basis of the figure",
+        "GIVEN entitled virtual accounts are linked to current accounts in different currencies WHEN the inflow is displayed THEN the system shows a separate total per currency without converting between currencies",
+        "GIVEN the user has selected specific entities WHEN the inflow is displayed THEN the figure covers only the selected entities",
+        "GIVEN credit data cannot be retrieved WHEN the summary loads THEN the system shows the inflow as not available instead of zero"
+      ],
+      "additional_scenarios": [
+        "GIVEN no credits have been received in the period WHEN the summary loads THEN the system shows a zero inflow with the period basis",
+        "GIVEN the inflow figure is displayed WHEN the user hovers or taps the information icon THEN the system explains that the figure is a collection measure and not the current account balance",
+        "GIVEN a new credit is attributed to an entitled virtual account WHEN the summary is refreshed THEN the consolidated inflow includes the new credit"
+      ],
+      "ears_requirements": [
+        "The system shall display the consolidated inflow across the user's entitled virtual accounts in the aggregated summary.",
+        "The system shall display the consolidated inflow with its currency and date basis.",
+        "Where entitled virtual accounts use different currencies, the system shall display a separate inflow total per currency.",
+        "While an entity selection is active, the system shall compute the consolidated inflow over the selected entities only.",
+        "If credit data cannot be retrieved, then the system shall show the consolidated inflow as not available rather than zero."
+      ],
+      "brd_reference": "BF-AS-VA-01 (Aggregated Summary of Accounts); Section 3.2.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-001",
+          "reason": "the inflow view is part of the aggregated summary",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-007",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-002",
+      "traces": [
+        "ITEM-007"
+      ],
+      "title": "View all linked virtual accounts in a consolidated list",
+      "description": "As a Corporate User, I want to view all my linked virtual accounts in one consolidated list with their current account, Root VA, Parent VA, type, name, number, nickname, currency and status, so that I can find and compare accounts without switching screens.",
+      "priority": "Highest",
+      "dependencies": "Relies on the Corporate Banking System for virtual account data and entitlements.",
+      "business_validation_rules": "The list shows only entitled virtual accounts. Displayed fields: Current Account Number, Current Account Name, Bank Code/Root VA, Parent Virtual Account Number, Virtual Account Type, Virtual Account Name, Virtual Account Number, Nickname, Currency and Status (Active/Closed).",
+      "business_validation_rule_ids": [
+        "V-1",
+        "V-21"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN an entitled Corporate User WHEN the user opens the account list THEN the system displays all entitled virtual accounts in a single consolidated list",
+        "GIVEN the account list is displayed WHEN the user reviews a row THEN the row shows Current Account Number, Current Account Name, Bank Code/Root VA, Parent VA Number, VA Type, VA Name, VA Number, Nickname, Currency and Status",
+        "GIVEN a virtual account of type Customer VA, Add on - Self VA or Add on - On Behalf of VA WHEN the list is displayed THEN the VA Type column shows that type label",
+        "GIVEN the user has not defined a nickname for an account WHEN the list is displayed THEN the nickname cell is shown empty and no nickname is required",
+        "GIVEN the account data cannot be retrieved WHEN the user opens the list THEN the system displays a service-unavailable message instead of an empty list"
+      ],
+      "additional_scenarios": [
+        "GIVEN the user has no entitled virtual accounts WHEN the list opens THEN the system displays a no-accounts message",
+        "GIVEN the list is displayed on Mobile WHEN space is limited THEN the key fields VA Number, VA Name, Nickname and Status remain visible and the rest are available on expansion",
+        "GIVEN the user opens the account list WHEN the list is served THEN the access is recorded in the audit trail"
+      ],
+      "ears_requirements": [
+        "When an entitled Corporate User opens the account list, the system shall display all entitled virtual accounts in a single consolidated list.",
+        "The system shall display Current Account Number, Current Account Name, Bank Code/Root VA, Parent VA Number, VA Type, VA Name, VA Number, Nickname, Currency and Status for each listed virtual account.",
+        "The system shall display the virtual account type as Customer VA, Add on - Self VA or Add on - On Behalf of VA.",
+        "Where no nickname has been defined for an account, the system shall display an empty nickname cell.",
+        "If account data cannot be retrieved, then the system shall display a service-unavailable message rather than an empty list."
+      ],
+      "brd_reference": "BF-AS-VA-02 (Accounts List Information); Sections 3.2.1, 5.1, 5.2.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-001",
+          "reason": "the list is the next level of the interface hierarchy after the aggregated summary",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-008",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-002",
+      "traces": [
+        "ITEM-008"
+      ],
+      "title": "Order the account list by favorites, status and opening date",
+      "description": "As a Corporate User, I want the account list to show my favorite accounts first, then Active accounts before other statuses, then accounts by opening date from newest to oldest, so that the accounts I use most are always at the top.",
+      "priority": "High",
+      "dependencies": "Uses the favorites from US-039.",
+      "business_validation_rules": "Default order: Rule 1 favorites first; Rule 2 Active accounts then other statuses; Rule 3 opening date newest to oldest.",
+      "business_validation_rule_ids": [
+        "V-3"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a user with favorite and non-favorite accounts WHEN the account list opens THEN all favorite accounts appear before non-favorite accounts",
+        "GIVEN accounts within the favorite and non-favorite groups WHEN the list is ordered THEN Active accounts appear before accounts in other statuses within each group",
+        "GIVEN accounts with the same favorite flag and status WHEN the list is ordered THEN they are ordered by opening date from newest to oldest",
+        "GIVEN the user applies a column sort WHEN the sort is active THEN the chosen sort replaces the default order until it is cleared",
+        "GIVEN the user has no favorites WHEN the list opens THEN the order starts with Rule 2 (Active first) and then Rule 3 (opening date)"
+      ],
+      "additional_scenarios": [
+        "GIVEN the user marks a new favorite WHEN the list is refreshed THEN the account moves into the favorites group at the top",
+        "GIVEN two accounts have the same opening date WHEN they are ordered THEN their relative order is stable across page loads",
+        "GIVEN the list spans several pages WHEN the user moves between pages THEN the default order is applied across the whole result set, not page by page"
+      ],
+      "ears_requirements": [
+        "The system shall display favorite accounts before non-favorite accounts in the default account list order.",
+        "Within the favorite and non-favorite groups, the system shall display Active accounts before accounts in other statuses.",
+        "Within the same favorite flag and status, the system shall order accounts by opening date from newest to oldest.",
+        "While a user-selected column sort is active, the system shall apply that sort instead of the default order.",
+        "The system shall apply the default order across the whole entitled result set and not per page."
+      ],
+      "brd_reference": "BF-AS-VA-02 (Accounts List Information); Section 5.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-007",
+          "reason": "ordering applies to the consolidated list",
+          "origin": "brd"
+        },
+        {
+          "story_id": "US-039",
+          "reason": "Rule 1 needs the user's favorite accounts",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-009",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-002",
+      "traces": [
+        "ITEM-009"
+      ],
+      "title": "See Closed virtual accounts for up to 12 months",
+      "description": "As a Corporate User, I want to see virtual accounts in Closed status for up to the last 12 months, so that I can still investigate collections received on recently closed accounts.",
+      "priority": "High",
+      "dependencies": "Relies on the Corporate Banking System for account status and closure date.",
+      "business_validation_rules": "Status is Active or Closed. Closed accounts are visible for up to the last 12 months; older Closed accounts are not listed.",
+      "business_validation_rule_ids": [
+        "V-4",
+        "V-21"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a virtual account closed within the last 12 months WHEN the user opens the account list THEN the account is listed with status Closed",
+        "GIVEN a virtual account closed more than 12 months ago WHEN the user opens the account list THEN the account is not listed",
+        "GIVEN a Closed account is listed WHEN the user opens its details THEN the details and transaction history within the allowed periods are available",
+        "GIVEN the user filters by status Closed WHEN the filter is applied THEN only Closed accounts within the 12-month window are shown",
+        "GIVEN a Closed account is listed WHEN the user attempts an account information confirmation for it THEN the account is not selectable because confirmations apply to Active accounts only"
+      ],
+      "additional_scenarios": [
+        "GIVEN a Closed account reaches 12 months after closure WHEN the list is next loaded THEN the account no longer appears",
+        "GIVEN a user searches for the VA number of an account closed more than 12 months ago WHEN the search runs THEN no result is returned and the no-results notification is shown",
+        "GIVEN a Closed account is a favorite WHEN the list is ordered THEN it appears in the favorites group after the Active favorites"
+      ],
+      "ears_requirements": [
+        "The system shall list virtual accounts in Closed status for up to 12 months after closure.",
+        "The system shall exclude from the account list virtual accounts closed more than 12 months ago.",
+        "The system shall display the status of each listed virtual account as Active or Closed.",
+        "When the user filters by status Closed, the system shall show only Closed accounts within the 12-month window.",
+        "The system shall prevent Closed accounts from being selected for an account information confirmation."
+      ],
+      "brd_reference": "BF-AS-VA-02 (Accounts List Information); Sections 3.2.1, 5.2.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-007",
+          "reason": "closed accounts appear in the consolidated list",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-010",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-002",
+      "traces": [
+        "ITEM-010"
+      ],
+      "title": "Download or export the account list in PDF or XLSX",
+      "description": "As a Corporate User, I want to download or export the entire account list or only the accounts I select in PDF or XLSX, so that I can share or reconcile the list outside the portal.",
+      "priority": "Medium",
+      "dependencies": "None beyond the account list in US-007.",
+      "business_validation_rules": "Virtual Account List formats are PDF and XLSX with no digital signature. Exports contain only entitled accounts. Every download is audited.",
+      "business_validation_rule_ids": [
+        "V-1",
+        "V-8",
+        "V-19"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN an entitled Corporate User on the account list WHEN the user chooses export without selecting rows THEN the system offers to export the entire entitled list",
+        "GIVEN the user has selected specific accounts WHEN the user chooses export THEN the system exports only the selected accounts",
+        "GIVEN the export dialog is open WHEN the user picks a format THEN the system offers PDF and XLSX only and no digital signature option",
+        "GIVEN filters are applied to the list WHEN the user exports the entire list THEN the export contains the filtered entitled result set across all pages",
+        "GIVEN the export cannot be generated WHEN the user requests it THEN the system displays an error and no partial file is downloaded"
+      ],
+      "additional_scenarios": [
+        "GIVEN the user completes an export WHEN the file is downloaded THEN the download is recorded in the audit trail with user identity and timestamp",
+        "GIVEN the list contains accounts the user is not entitled to see WHEN the export is generated THEN those accounts are never included",
+        "GIVEN the export uses the user's column customization WHEN the file is generated THEN the columns follow the BRD list fields regardless of hidden columns"
+      ],
+      "ears_requirements": [
+        "When the user exports the account list without a selection, the system shall export the entire entitled list.",
+        "When the user exports with selected accounts, the system shall export only the selected accounts.",
+        "The system shall offer the Virtual Account List export in PDF and XLSX only, without a digital signature option.",
+        "If the export cannot be generated, then the system shall display an error and shall not download a partial file.",
+        "When an account list export is downloaded, the system shall record the download with user identity and timestamp in the audit trail."
+      ],
+      "brd_reference": "BF-AS-VA-02 (Accounts List Information); Sections 3.2.1, 5.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-007",
+          "reason": "the export takes the consolidated list as input",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-011",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-002",
+      "traces": [
+        "ITEM-011"
+      ],
+      "title": "Open account details from the account list",
+      "description": "As a Corporate User, I want to open the details of a virtual account I select in the list, so that I can move from the broad list to the account-level information following the module hierarchy.",
+      "priority": "High",
+      "dependencies": "Navigation target is the account details view in US-020.",
+      "business_validation_rules": "The interface hierarchy is Aggregated Summary >> Account List >> Account Details >> Transaction History; only entitled accounts can be opened.",
+      "business_validation_rule_ids": [
+        "V-1"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN an entitled Corporate User on the account list WHEN the user selects a virtual account row THEN the system opens the account details of that virtual account",
+        "GIVEN the user is on the account details WHEN the user goes back THEN the system returns to the account list with the previous filters, sort, page and selection preserved",
+        "GIVEN the user follows the hierarchy WHEN the user navigates from the aggregated summary to the list and then to details THEN each level shows data for the same entity selection",
+        "GIVEN a virtual account's entitlement was removed after the list loaded WHEN the user selects it THEN the system displays a no-access message instead of the details",
+        "GIVEN the details cannot be retrieved WHEN the user selects the row THEN the system displays a service-unavailable message and stays on the list"
+      ],
+      "additional_scenarios": [
+        "GIVEN a Closed account within the 12-month window WHEN the user selects it THEN the details open showing the Closed status",
+        "GIVEN the user opens details on Mobile WHEN the details load THEN the same fields as on Web are available",
+        "GIVEN the user opens a virtual account's details WHEN the view is served THEN the access is recorded in the audit trail"
+      ],
+      "ears_requirements": [
+        "When the user selects a virtual account in the account list, the system shall open that account's details.",
+        "When the user returns from account details, the system shall restore the account list filters, sort, page and selection.",
+        "The system shall preserve the entity selection across the aggregated summary, account list and account details.",
+        "If the selected virtual account is no longer entitled, then the system shall display a no-access message.",
+        "If the account details cannot be retrieved, then the system shall display a service-unavailable message and remain on the account list."
+      ],
+      "brd_reference": "BF-AS-VA-02, BF-AS-VA-03; Section 3.2.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-007",
+          "reason": "the list row is the entry point",
+          "origin": "brd"
+        },
+        {
+          "story_id": "US-020",
+          "reason": "the details view is the navigation target",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-012",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-002",
+      "traces": [
+        "ITEM-012"
+      ],
+      "title": "Change rows per page on the account list",
+      "description": "As a Corporate User, I want to change the number of rows shown on the account list between 10, 20 and 50, so that I can scan long lists of virtual accounts at the density I prefer.",
+      "priority": "Low",
+      "dependencies": "None beyond the account list in US-007.",
+      "business_validation_rules": "Rows per page options are 10 (default), 20 and 50.",
+      "business_validation_rule_ids": [
+        "V-7"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a Corporate User opens the account list WHEN the list loads THEN 10 rows are shown per page by default",
+        "GIVEN the account list is displayed WHEN the user opens the pagination control THEN the options 10, 20 and 50 are offered",
+        "GIVEN the user selects 20 or 50 rows per page WHEN the selection is applied THEN the list shows that number of rows and recalculates the page count",
+        "GIVEN the user changes rows per page WHEN the list refreshes THEN the current filters and sort are kept",
+        "GIVEN the result set has fewer rows than the page size WHEN the list is displayed THEN all rows are shown on a single page"
+      ],
+      "additional_scenarios": [
+        "GIVEN the user is on page 3 with 10 rows per page WHEN the user switches to 50 rows THEN the system shows the page containing the first previously visible row",
+        "GIVEN pagination is displayed WHEN the user reviews it THEN the system shows the total number of records",
+        "GIVEN the user tries to enter a page size other than 10, 20 or 50 WHEN the control is used THEN only the allowed values can be chosen"
+      ],
+      "ears_requirements": [
+        "The system shall display 10 rows per page on the account list by default.",
+        "The system shall offer 10, 20 and 50 as the rows-per-page options.",
+        "When the user selects a rows-per-page option, the system shall display that number of rows and recalculate the page count.",
+        "When the rows-per-page value changes, the system shall keep the active filters and sort.",
+        "The system shall display the total number of records with the pagination control."
+      ],
+      "brd_reference": "BF-AS-VA-02 (Accounts List Information); Section 3.2.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-007",
+          "reason": "pagination applies to the consolidated list",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-013",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-003",
+      "traces": [
+        "ITEM-013"
+      ],
+      "title": "Search virtual accounts with partial keywords across all pages",
+      "description": "As a Corporate User, I want to search with partial keywords across all information fields and all my virtual accounts on every page, so that I can locate a payer's account quickly in a long list.",
+      "priority": "High",
+      "dependencies": "None beyond the account list in US-007.",
+      "business_validation_rules": "Partial search applies across fields such as CIF, Current Account number and name, VA name, Parent VA name and number, Root VA, VA number and nickname, across all entitled VAs on all pages. A notification is shown when nothing matches.",
+      "business_validation_rule_ids": [
+        "V-1",
+        "V-16"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN an entitled Corporate User on the account list WHEN the user enters a partial keyword THEN the system returns every entitled virtual account with a matching value in any searchable field",
+        "GIVEN the list spans several pages WHEN the user searches THEN matches from all pages are returned, not only the visible page",
+        "GIVEN the keyword matches part of a nickname, VA name or Parent VA name WHEN the search runs THEN the account is included in the results",
+        "GIVEN the keyword matches nothing in the entitled accounts WHEN the search runs THEN the system displays a no-records-found notification",
+        "GIVEN a keyword matches an account the user is not entitled to WHEN the search runs THEN that account is not returned"
+      ],
+      "additional_scenarios": [
+        "GIVEN the user clears the search box WHEN the search is cleared THEN the full entitled list is restored with the default order",
+        "GIVEN the keyword differs only in letter case or Vietnamese diacritics WHEN the search runs THEN matching follows the platform's standard search normalization",
+        "GIVEN search results are displayed WHEN the user exports the list THEN the export contains the search results"
+      ],
+      "ears_requirements": [
+        "When the user enters a partial keyword, the system shall return every entitled virtual account with a matching value in any searchable field.",
+        "The system shall search across all entitled virtual accounts on all pages and not only the visible page.",
+        "The system shall include CIF, Current Account number and name, VA name, Parent VA name and number, Root VA, VA number and nickname in the searchable fields.",
+        "If no entitled virtual account matches the keyword, then the system shall display a no-records-found notification.",
+        "The system shall exclude virtual accounts outside the user's entitlement from search results."
+      ],
+      "brd_reference": "BF-AS-VA-02, BF-AS-VA-07; Section 3.2.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-007",
+          "reason": "search runs over the consolidated list",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-014",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-003",
+      "traces": [
+        "ITEM-014"
+      ],
+      "title": "Filter by column headers and quick filter by Root VA",
+      "description": "As a Corporate User, I want to filter the account list on any column header and use a quick filter by Root VA, so that I can narrow the list to one collection structure in a single action.",
+      "priority": "Medium",
+      "dependencies": "None beyond the account list in US-007.",
+      "business_validation_rules": "Column filters are available on every column header; the quick filter offers predefined filtering by Root VA. Filter values come only from entitled accounts.",
+      "business_validation_rule_ids": [
+        "V-1",
+        "V-16"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a Corporate User on the account list WHEN the user opens a column header filter THEN the system offers filter values for that column",
+        "GIVEN a column filter value is chosen WHEN the filter is applied THEN only accounts matching that value are listed",
+        "GIVEN the account list is displayed WHEN the user opens the quick filter THEN the system lists the user's entitled Root VAs as predefined filters",
+        "GIVEN the user selects a Root VA in the quick filter WHEN it is applied THEN only virtual accounts under that Root VA are listed",
+        "GIVEN the applied filters match no accounts WHEN the list refreshes THEN the system displays a no-records-found notification"
+      ],
+      "additional_scenarios": [
+        "GIVEN filters on several columns WHEN they are applied THEN the list shows accounts matching all filters",
+        "GIVEN filters are active WHEN the user clears them THEN the full entitled list is restored",
+        "GIVEN a Root VA outside the user's entitlement WHEN the quick filter opens THEN that Root VA is not offered"
+      ],
+      "ears_requirements": [
+        "The system shall provide a filter on every column header of the account list.",
+        "When a column filter value is applied, the system shall list only accounts matching that value.",
+        "The system shall provide a quick filter listing the user's entitled Root VAs.",
+        "When a Root VA quick filter is applied, the system shall list only virtual accounts under that Root VA.",
+        "If the applied filters match no accounts, then the system shall display a no-records-found notification."
+      ],
+      "brd_reference": "BF-AS-VA-07 (Personalization, Customization & Utilities); Sections 3.2.1, 5.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-007",
+          "reason": "filters apply to the consolidated list",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-015",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-003",
+      "traces": [
+        "ITEM-015"
+      ],
+      "title": "Use More Filters on CIF, accounts, Root VA, VA and nickname",
+      "description": "As a Corporate User, I want to filter virtual accounts by CIF, Current Account number, Current Account name, Root VA, VA number, VA name and nickname with partial matching, so that I can combine criteria to find exactly the accounts I need.",
+      "priority": "Medium",
+      "dependencies": "Complements the quick filter in US-014.",
+      "business_validation_rules": "More Filters fields: CIF, Current Account number, Current Account name, Root VA, Virtual Account number, Virtual Account name, Account nickname. Partial search applies. If no results are found, a notification is displayed.",
+      "business_validation_rule_ids": [
+        "V-1",
+        "V-16"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a Corporate User on the account list WHEN the user opens More Filters THEN the fields CIF, Current Account number, Current Account name, Root VA, VA number, VA name and nickname are offered",
+        "GIVEN the user enters part of a value in a More Filters field WHEN the filters are applied THEN accounts containing that partial value are listed",
+        "GIVEN the user fills several More Filters fields WHEN the filters are applied THEN only accounts matching all entered criteria are listed",
+        "GIVEN the More Filters criteria match no accounts WHEN they are applied THEN the system displays a no-results notification",
+        "GIVEN More Filters are applied WHEN the user resets them THEN all More Filters fields are cleared and the full entitled list is restored"
+      ],
+      "additional_scenarios": [
+        "GIVEN More Filters are applied WHEN the user changes rows per page or sorts THEN the filters stay applied",
+        "GIVEN the CIF field WHEN the user opens it in a multi-CIF context THEN only entitled CIFs can be chosen",
+        "GIVEN More Filters are applied WHEN the user exports the list THEN the export contains the filtered result set"
+      ],
+      "ears_requirements": [
+        "The system shall offer More Filters on CIF, Current Account number, Current Account name, Root VA, VA number, VA name and nickname.",
+        "When a partial value is entered in a More Filters field, the system shall match accounts containing that value.",
+        "When several More Filters fields are filled, the system shall list only accounts matching all criteria.",
+        "If the More Filters criteria match no accounts, then the system shall display a no-results notification.",
+        "When the user resets More Filters, the system shall clear all criteria and restore the full entitled list."
+      ],
+      "brd_reference": "BF-AS-VA-07 (Personalization, Customization & Utilities); Section 5.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-014",
+          "reason": "More Filters extends the column and quick filters",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-016",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-003",
+      "traces": [
+        "ITEM-016"
+      ],
+      "title": "Sort the account list by any column",
+      "description": "As a Corporate User, I want to sort the account list in ascending or descending order on each column, so that I can arrange accounts by the attribute I care about.",
+      "priority": "Low",
+      "dependencies": "Overrides the default order from US-008 while active.",
+      "business_validation_rules": "Each column can be sorted ascending or descending; the sort applies to the whole entitled result set.",
+      "business_validation_rule_ids": [
+        "V-3"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a Corporate User on the account list WHEN the user clicks a column header THEN the list is sorted ascending by that column",
+        "GIVEN a column is sorted ascending WHEN the user clicks the header again THEN the list is sorted descending",
+        "GIVEN a sort is active WHEN the user views the header THEN the sorted column and direction are indicated",
+        "GIVEN the list spans several pages WHEN a sort is applied THEN the order covers the full result set across pages",
+        "GIVEN a sort is active WHEN the user clears it THEN the default order (favorites, Active first, newest opening date) is restored"
+      ],
+      "additional_scenarios": [
+        "GIVEN a sort on a text column with Vietnamese characters WHEN it is applied THEN accounts are ordered by the platform's standard collation",
+        "GIVEN filters and a sort are active WHEN the user changes the filter THEN the sort is kept on the new result set",
+        "GIVEN a numeric column such as Current Account Number WHEN it is sorted THEN values are ordered numerically"
+      ],
+      "ears_requirements": [
+        "When the user clicks a column header, the system shall sort the account list ascending by that column.",
+        "When the user clicks the header of an ascending-sorted column, the system shall sort it descending.",
+        "The system shall indicate the sorted column and direction.",
+        "The system shall apply a column sort across the full entitled result set.",
+        "When the user clears the sort, the system shall restore the default account list order."
+      ],
+      "brd_reference": "BF-AS-VA-02; Section 3.2.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-008",
+          "reason": "a column sort replaces the default order while active",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-017",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-003",
+      "traces": [
+        "ITEM-017"
+      ],
+      "title": "Reorder columns and choose visible columns",
+      "description": "As a Corporate User, I want to reorder columns by drag and drop and choose which columns are visible from the column menu, so that the information I need first is shown first.",
+      "priority": "Medium",
+      "dependencies": "Persistence of the customized view is handled separately.",
+      "business_validation_rules": "Columns can be reordered by dragging column headers and shown or hidden from the column menu.",
+      "business_validation_rule_ids": [
+        "V-24"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a Corporate User on the account list WHEN the user drags a column header to a new position THEN the column is moved to that position",
+        "GIVEN the account list is displayed WHEN the user opens the column menu THEN all available list columns are shown with their visibility state",
+        "GIVEN the column menu is open WHEN the user hides a column THEN the column disappears from the list",
+        "GIVEN a hidden column WHEN the user re-enables it in the column menu THEN the column is shown again",
+        "GIVEN the user attempts to hide every column WHEN the last visible column is unchecked THEN the system keeps at least one column visible"
+      ],
+      "additional_scenarios": [
+        "GIVEN columns are reordered WHEN the user searches, filters or paginates THEN the column order is kept",
+        "GIVEN a column used for the current sort is hidden WHEN it is hidden THEN the sort is cleared and the default order applies",
+        "GIVEN the user customizes columns on Mobile WHEN space is limited THEN the column menu remains available even if drag and drop is not"
+      ],
+      "ears_requirements": [
+        "When the user drags a column header to a new position, the system shall move the column to that position.",
+        "The system shall provide a column menu listing all available columns with their visibility state.",
+        "When the user hides or shows a column in the column menu, the system shall update the list accordingly.",
+        "The system shall keep at least one column visible.",
+        "While columns are customized, the system shall keep the customization during search, filtering and pagination."
+      ],
+      "brd_reference": "BF-AS-VA-02; Section 3.2.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-007",
+          "reason": "column customization applies to the consolidated list",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-018",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-003",
+      "traces": [
+        "ITEM-018"
+      ],
+      "title": "Keep my column view for future logins and reset it",
+      "description": "As a Corporate User, I want my customized column view saved automatically and reused at my future logins, with an option to reset it to the default, so that I do not have to set up the list every time.",
+      "priority": "Medium",
+      "dependencies": "Persists the customization from US-017 at user-profile level.",
+      "business_validation_rules": "The customized column view is saved automatically per user and reused at future logins until changed again; a reset restores the default columns.",
+      "business_validation_rule_ids": [
+        "V-24"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a Corporate User has reordered or hidden columns WHEN the user signs out and signs in again THEN the account list shows the same column view",
+        "GIVEN a column change WHEN the change is made THEN the system saves it automatically without a separate save action",
+        "GIVEN a customized column view WHEN the user chooses reset THEN the columns return to the default order and visibility",
+        "GIVEN the view was reset WHEN the user signs in again THEN the default column view is shown",
+        "GIVEN the preference cannot be saved WHEN the user changes columns THEN the change applies to the current session and the user is informed it was not saved"
+      ],
+      "additional_scenarios": [
+        "GIVEN two users in the same company WHEN one customizes columns THEN the other user's view is unaffected",
+        "GIVEN the same user signs in on another device of the same channel WHEN the list loads THEN the saved column view is applied",
+        "GIVEN a new column is introduced in a later release WHEN a user with a saved view signs in THEN the new column is added without discarding the saved order"
+      ],
+      "ears_requirements": [
+        "When the user changes the column order or visibility, the system shall save the column view automatically at user-profile level.",
+        "When the user signs in again, the system shall apply the saved column view to the account list.",
+        "When the user resets the column view, the system shall restore the default column order and visibility.",
+        "If the column preference cannot be saved, then the system shall apply the change for the current session and inform the user.",
+        "The system shall keep each user's column view independent of other users."
+      ],
+      "brd_reference": "BF-AS-VA-02; Section 3.2.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-017",
+          "reason": "the saved view is the customization made in US-017",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-019",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-003",
+      "traces": [
+        "ITEM-019"
+      ],
+      "title": "Select from a dropdown of accounts authorized for inquiry",
+      "description": "As a Corporate User, I want a dropdown of the virtual accounts, Root VAs, Parent VA numbers and VA numbers I am authorized to inquire on, so that I can jump straight to the account I need on inquiry screens.",
+      "priority": "Medium",
+      "dependencies": "Relies on the Corporate Banking System entitlements.",
+      "business_validation_rules": "The dropdown lists only virtual accounts, Root VA, Parent VA numbers and VA numbers the user is authorized to inquire on.",
+      "business_validation_rule_ids": [
+        "V-1"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a Corporate User on an inquiry screen WHEN the user opens the account dropdown THEN the system lists the virtual accounts, Root VAs, Parent VA numbers and VA numbers the user is authorized for",
+        "GIVEN the dropdown is open WHEN the user selects an entry THEN the inquiry screen loads data for that selection",
+        "GIVEN the dropdown is open WHEN the user types part of a number or name THEN the entries narrow to matching authorized entries",
+        "GIVEN an account the user is not authorized for WHEN the dropdown is built THEN the account is not listed",
+        "GIVEN the authorized account list cannot be loaded WHEN the user opens the dropdown THEN the system displays a service-unavailable message"
+      ],
+      "additional_scenarios": [
+        "GIVEN the user has favorites WHEN the dropdown opens THEN favorites are listed first",
+        "GIVEN a nickname is defined for an account WHEN the dropdown lists it THEN the nickname is shown with the VA number",
+        "GIVEN a Closed account within the 12-month window WHEN the dropdown lists it THEN its Closed status is indicated"
+      ],
+      "ears_requirements": [
+        "The system shall provide a dropdown listing the virtual accounts, Root VAs, Parent VA numbers and VA numbers the user is authorized to inquire on.",
+        "When the user selects a dropdown entry, the system shall load the inquiry screen for that selection.",
+        "When the user types in the dropdown, the system shall narrow the entries to matching authorized entries.",
+        "The system shall exclude unauthorized accounts from the dropdown.",
+        "If the authorized account list cannot be loaded, then the system shall display a service-unavailable message."
+      ],
+      "brd_reference": "BF-AS-VA-07 (Personalization, Customization & Utilities); Section 5.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-004",
+          "reason": "the dropdown is built from the entitled hierarchy",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-020",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-004",
+      "traces": [
+        "ITEM-020"
+      ],
+      "title": "View organisation and account information of a virtual account",
+      "description": "As a Corporate User, I want to view the organisation and account information of a selected virtual account, so that I can confirm which entity, current account and hierarchy position the account belongs to.",
+      "priority": "Highest",
+      "dependencies": "Relies on the Corporate Banking System for organisation, account and hierarchy data.",
+      "business_validation_rules": "Organisation information: Business Registration Number, Organizational Name, CIF Number, Address. Account information: Managing Branch, VA Number, Current Account Number, Account Type, Root VA, Parent VA Number, VA Name, VA Nickname, Currency, VA Opening Date, VA Status (Active/Closed). Only entitled accounts can be viewed.",
+      "business_validation_rule_ids": [
+        "V-1",
+        "V-21"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN an entitled Corporate User opens a virtual account's details WHEN the view loads THEN the organisation information shows Business Registration Number, Organizational Name, CIF Number and registered Address",
+        "GIVEN the details view is displayed WHEN the user reviews the account information THEN it shows Managing Branch, VA Number, Current Account Number, Account Type, Root VA, Parent VA Number, VA Name, Nickname, Currency, Opening Date and Status",
+        "GIVEN the details view is displayed WHEN the user reviews the Current Account Number THEN it is identified as the physical account where the funds reside and settle",
+        "GIVEN the user has not defined a nickname WHEN the details are displayed THEN the nickname field is empty and no nickname is required",
+        "GIVEN the details cannot be retrieved WHEN the user opens the view THEN the system displays a service-unavailable message"
+      ],
+      "additional_scenarios": [
+        "GIVEN a Closed virtual account within the 12-month window WHEN its details are opened THEN the status shows Closed and the details remain viewable",
+        "GIVEN the details are opened on Mobile WHEN the view loads THEN the same organisation and account fields are available",
+        "GIVEN the user opens account details WHEN the view is served THEN the access is recorded in the audit trail"
+      ],
+      "ears_requirements": [
+        "When an entitled Corporate User opens a virtual account's details, the system shall display Business Registration Number, Organizational Name, CIF Number and Address.",
+        "The system shall display Managing Branch, VA Number, Current Account Number, Account Type, Root VA, Parent VA Number, VA Name, Nickname, Currency, Opening Date and Status in the account information.",
+        "The system shall identify the linked Current Account as the physical account in which the funds reside and settle.",
+        "Where no nickname has been defined, the system shall display an empty nickname field.",
+        "If the account details cannot be retrieved, then the system shall display a service-unavailable message."
+      ],
+      "brd_reference": "BF-AS-VA-03 (Account Details Information); Sections 5.1, 5.2.2",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-007",
+          "reason": "details are shown for a virtual account from the consolidated list",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-021",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-004",
+      "traces": [
+        "ITEM-021"
+      ],
+      "title": "See today's inflow and month-to-date credits",
+      "description": "As a Corporate User, I want to see today's inflow and the month-to-date credits of a selected virtual account, so that I know how much has been collected on it today and this month.",
+      "priority": "High",
+      "dependencies": "Relies on the Corporate Banking System for credit postings attributed to the virtual account.",
+      "business_validation_rules": "Today's inflow is the total inflow into the virtual account today; month-to-date credits is the total inflow from the first day of the current month up to the current date/time. Neither is a balance held by the virtual account.",
+      "business_validation_rule_ids": [
+        "V-22"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN an entitled Corporate User on a virtual account's details WHEN the view loads THEN the system shows Today's Inflow as the total credits into the virtual account today",
+        "GIVEN the details view is displayed WHEN the user reviews Month-to-date credits THEN it shows the total credits from the first day of the current month up to the current date/time",
+        "GIVEN both measures are displayed WHEN the user reviews them THEN each is shown with the virtual account currency",
+        "GIVEN no credits have been received today WHEN the view loads THEN Today's Inflow shows zero",
+        "GIVEN credit data cannot be retrieved WHEN the view loads THEN both measures are shown as not available rather than zero"
+      ],
+      "additional_scenarios": [
+        "GIVEN today is the first day of the month WHEN the view loads THEN Month-to-date credits equals Today's Inflow",
+        "GIVEN a new credit is attributed to the account WHEN the view is refreshed THEN both measures include the new credit",
+        "GIVEN the measures are displayed WHEN the user opens the information hint THEN the system explains they are inflow figures and not funds held by the virtual account"
+      ],
+      "ears_requirements": [
+        "The system shall display Today's Inflow as the total credits into the virtual account on the current day.",
+        "The system shall display Month-to-date credits as the total credits from the first day of the current month up to the current date/time.",
+        "The system shall display both inflow measures in the virtual account currency.",
+        "When no credits have been received in the period, the system shall display the measure as zero.",
+        "If credit data cannot be retrieved, then the system shall display the inflow measures as not available rather than zero."
+      ],
+      "brd_reference": "BF-AS-VA-03 (Account Details Information); Sections 5.1, 5.2.2",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-020",
+          "reason": "the inflow measures are part of the details view",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-022",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-004",
+      "traces": [
+        "ITEM-022"
+      ],
+      "title": "See the last 10 transactions and open full history",
+      "description": "As a Corporate User, I want to see the last 10 transactions of a selected virtual account with a View more option, so that I can check recent collections and drill into the full history when needed.",
+      "priority": "High",
+      "dependencies": "View more navigates to the transaction history in US-025.",
+      "business_validation_rules": "The details view shows the last 10 transactions; View more opens the Transaction History page for the same account.",
+      "business_validation_rule_ids": [
+        "V-23"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN an entitled Corporate User on a virtual account's details WHEN the view loads THEN the system shows the last 10 transactions of that account, newest first",
+        "GIVEN the recent transactions are displayed WHEN the user reviews a row THEN it shows the transaction date, reference number, amount, currency and description",
+        "GIVEN the account has fewer than 10 transactions WHEN the view loads THEN all available transactions are shown",
+        "GIVEN the recent transactions are displayed WHEN the user selects View more THEN the system opens the Transaction History page for the same virtual account",
+        "GIVEN the account has no transactions WHEN the view loads THEN the system displays a no-transactions message instead of an error"
+      ],
+      "additional_scenarios": [
+        "GIVEN transaction data cannot be retrieved WHEN the view loads THEN the system displays a data-not-available message distinct from no transactions",
+        "GIVEN the user opens View more WHEN the history page loads THEN it uses the default preset period of 7 days",
+        "GIVEN a Closed account within the 12-month window WHEN the view loads THEN its last 10 transactions are shown"
+      ],
+      "ears_requirements": [
+        "The system shall display the last 10 transactions of the selected virtual account, newest first, in the account details.",
+        "The system shall display transaction date, reference number, amount, currency and description for each recent transaction.",
+        "When the user selects View more, the system shall open the Transaction History page for the same virtual account.",
+        "When the account has no transactions, the system shall display a no-transactions message.",
+        "If transaction data cannot be retrieved, then the system shall display a data-not-available message distinct from the no-transactions message."
+      ],
+      "brd_reference": "BF-AS-VA-03 (Account Details Information); Section 5.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-020",
+          "reason": "recent transactions are part of the details view",
+          "origin": "brd"
+        },
+        {
+          "story_id": "US-025",
+          "reason": "View more opens the transaction history",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-023",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-004",
+      "traces": [
+        "ITEM-023"
+      ],
+      "title": "Go to the linked Current Account when entitled",
+      "description": "As a Corporate User, I want to be redirected from a virtual account to the screen of its linked Current Account when I hold that entitlement, so that I can check the physical account where the funds settle.",
+      "priority": "Medium",
+      "dependencies": "Depends on the Current Account inquiry screen of the Account Services module and the Corporate Banking System entitlements.",
+      "business_validation_rules": "The redirect is offered only to users granted the entitlement for the linked current account; entitlement to a VA does not imply entitlement to its current account.",
+      "business_validation_rule_ids": [
+        "V-1",
+        "V-17"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a Corporate User entitled to the linked Current Account WHEN the user views the virtual account's details THEN a redirect option to the Current Account screen is shown",
+        "GIVEN the redirect option is shown WHEN the user selects it THEN the system opens the Current Account screen of the linked current account",
+        "GIVEN a Corporate User not entitled to the linked Current Account WHEN the user views the details THEN no redirect option is shown",
+        "GIVEN a user without the entitlement attempts to open the Current Account screen through a direct link WHEN the request is made THEN the system denies access",
+        "GIVEN the Current Account screen is unavailable WHEN the user selects the redirect THEN the system displays a service-unavailable message and stays on the virtual account"
+      ],
+      "additional_scenarios": [
+        "GIVEN the user returns from the Current Account screen WHEN the user goes back THEN the virtual account details are shown again",
+        "GIVEN the user's Current Account entitlement is revoked during the session WHEN the user selects the redirect THEN access is denied",
+        "GIVEN the user follows the redirect WHEN the Current Account screen opens THEN the access is recorded in the audit trail"
+      ],
+      "ears_requirements": [
+        "Where the user is entitled to the linked Current Account, the system shall display a redirect option from the virtual account details.",
+        "When the user selects the redirect option, the system shall open the linked Current Account screen.",
+        "Where the user is not entitled to the linked Current Account, the system shall not display the redirect option.",
+        "If a user without the entitlement requests the Current Account screen, then the system shall deny access.",
+        "If the Current Account screen is unavailable, then the system shall display a service-unavailable message and remain on the virtual account details."
+      ],
+      "brd_reference": "BF-AS-VA-03; Section 3.2.2",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-020",
+          "reason": "the redirect is offered from the details view",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-024",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-004",
+      "traces": [
+        "ITEM-024"
+      ],
+      "title": "View the virtual account hierarchy in a separate tab",
+      "description": "As a Corporate User, I want to view the hierarchy structure of a virtual account in a separate tab, so that I can see its Root VA, Parent VA and sibling accounts without leaving the details.",
+      "priority": "Medium",
+      "dependencies": "Reuses the entitled hierarchy from US-004.",
+      "business_validation_rules": "The hierarchy tab shows Current Account > Root VA > Parent VA > VA for the selected account, limited to the user's entitlement.",
+      "business_validation_rule_ids": [
+        "V-1"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN an entitled Corporate User on a virtual account's details WHEN the user opens the Hierarchy tab THEN the system shows the account's Current Account, Root VA, Parent VA and the account itself",
+        "GIVEN the Hierarchy tab is displayed WHEN the user reviews it THEN the selected virtual account is highlighted in the structure",
+        "GIVEN the Hierarchy tab is displayed WHEN the user selects another entitled virtual account in it THEN the system opens that account's details",
+        "GIVEN the parent has virtual accounts the user is not entitled to WHEN the tab loads THEN those accounts are not shown",
+        "GIVEN the hierarchy cannot be retrieved WHEN the user opens the tab THEN the system displays a data-not-available message"
+      ],
+      "additional_scenarios": [
+        "GIVEN a virtual account directly under a Root VA without a separate Parent VA WHEN the tab loads THEN the structure shows the levels that exist without empty placeholders",
+        "GIVEN the tab is opened on Mobile WHEN the structure is wide THEN it can be expanded level by level",
+        "GIVEN a Closed sibling account within the 12-month window WHEN the tab loads THEN its Closed status is indicated"
+      ],
+      "ears_requirements": [
+        "The system shall provide a Hierarchy tab in the virtual account details.",
+        "When the Hierarchy tab is opened, the system shall display the Current Account, Root VA, Parent VA and selected virtual account.",
+        "The system shall highlight the selected virtual account in the hierarchy.",
+        "The system shall exclude virtual accounts outside the user's entitlement from the Hierarchy tab.",
+        "If the hierarchy cannot be retrieved, then the system shall display a data-not-available message."
+      ],
+      "brd_reference": "BF-AS-VA-03; Sections 3.2.2, 5.2.2",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-004",
+          "reason": "the tab presents the entitled hierarchy",
+          "origin": "brd"
+        },
+        {
+          "story_id": "US-020",
+          "reason": "the tab is part of the details view",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-025",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-005",
+      "traces": [
+        "ITEM-025"
+      ],
+      "title": "View transaction history with preset periods",
+      "description": "As a Corporate User, I want to view the transaction history of a selected virtual account for a preset period of 7 days, 14 days, last month or last 3 months, so that I can review recent collections without typing dates.",
+      "priority": "Highest",
+      "dependencies": "Relies on the Corporate Banking System for transaction data.",
+      "business_validation_rules": "Preset periods: 7 days (default), 14 days, last month, last 3 months. Only entitled accounts can be inquired.",
+      "business_validation_rule_ids": [
+        "V-1",
+        "V-6"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN an entitled Corporate User opens a virtual account's transaction history WHEN the page loads THEN the system shows transactions for the last 7 days by default",
+        "GIVEN the history page is displayed WHEN the user opens the period selector THEN the presets 7 days, 14 days, last month and last 3 months are offered",
+        "GIVEN the user selects a preset WHEN it is applied THEN the system shows the transactions of that period",
+        "GIVEN the selected period has no transactions WHEN it is applied THEN the system displays a no-transactions message",
+        "GIVEN transaction data cannot be retrieved WHEN the period is applied THEN the system displays a data-not-available message distinct from no transactions"
+      ],
+      "additional_scenarios": [
+        "GIVEN the preset last month WHEN it is applied THEN the period covers the previous calendar month",
+        "GIVEN a user without entitlement to the account WHEN the user requests its history THEN access is denied",
+        "GIVEN the user views the history WHEN the page is served THEN the access is recorded in the audit trail"
+      ],
+      "ears_requirements": [
+        "When an entitled Corporate User opens a virtual account's transaction history, the system shall display the transactions of the last 7 days by default.",
+        "The system shall offer the preset periods 7 days, 14 days, last month and last 3 months.",
+        "When the user applies a preset period, the system shall display the transactions of that period.",
+        "When the selected period has no transactions, the system shall display a no-transactions message.",
+        "If transaction data cannot be retrieved, then the system shall display a data-not-available message distinct from the no-transactions message."
+      ],
+      "brd_reference": "BF-AS-VA-04 (Virtual Account Transaction History); Sections 3.2.1, 5.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-020",
+          "reason": "history is reached from the account details",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-026",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-005",
+      "traces": [
+        "ITEM-026"
+      ],
+      "title": "Select a custom date range of up to 12 months",
+      "description": "As a Corporate User, I want to select a custom date range of up to 12 months per query within the historical look-up limit, so that I can investigate collections from any earlier period.",
+      "priority": "High",
+      "dependencies": "Extends the preset periods in US-025. The look-up limit (3-5 years) awaits a VCB decision.",
+      "business_validation_rules": "A single query covers at most 12 months; look-up is limited to the past 3-5 years from the current date [GAP: exact figure]. The from-date cannot be after the to-date and dates cannot be in the future.",
+      "business_validation_rule_ids": [
+        "V-5"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a Corporate User on the transaction history WHEN the user enters a from-date and to-date within 12 months of each other THEN the system shows the transactions of that range",
+        "GIVEN the user enters a range longer than 12 months WHEN the user applies it THEN the system rejects the range and states the 12-month maximum per query",
+        "GIVEN the user enters a from-date older than the historical look-up limit WHEN the user applies it THEN the system rejects the range and states the look-up limit",
+        "GIVEN the user enters a from-date later than the to-date WHEN the user applies it THEN the system rejects the range with a validation message",
+        "GIVEN the user enters a future to-date WHEN the user applies it THEN the system rejects the range with a validation message"
+      ],
+      "additional_scenarios": [
+        "GIVEN a range of exactly 12 months WHEN it is applied THEN the system accepts it",
+        "GIVEN records within the look-up limit are not available in the source WHEN the range is applied THEN the system states that data is not available for that period",
+        "GIVEN a valid custom range WHEN the user exports the history THEN the export uses the same range"
+      ],
+      "ears_requirements": [
+        "When the user applies a custom date range of at most 12 months, the system shall display the transactions in that range.",
+        "If the custom date range exceeds 12 months, then the system shall reject it and state the 12-month maximum.",
+        "If the from-date is older than the historical look-up limit, then the system shall reject the range and state the limit.",
+        "If the from-date is later than the to-date or the to-date is in the future, then the system shall reject the range with a validation message.",
+        "The system shall hold the historical look-up limit as a configurable parameter."
+      ],
+      "brd_reference": "BF-AS-VA-04 (Virtual Account Transaction History); Section 3.2.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-025",
+          "reason": "the custom range extends the history period selector",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-027",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-005",
+      "traces": [
+        "ITEM-027"
+      ],
+      "title": "See transaction details in the defined fields and formats",
+      "description": "As a Corporate User, I want each transaction to show its reference, dates, TellerID-Sequence, Branch-Host Date-PC Time, counterparty, correspondent bank, VA hierarchy values, amounts and description in the defined formats, so that I can trace and reconcile every receipt.",
+      "priority": "High",
+      "dependencies": "Relies on the Corporate Banking System for posting entries including TellerID, Sequence, Branch, Host Date and PC Time.",
+      "business_validation_rules": "Fields: Transaction Reference Number, Transaction Date, TellerID-Sequence (4 and 5 characters, zero-padded, e.g. 0004-01234), Branch-Host Date-PC Time (5 characters zero-padded, DD/MM/YYYY, HH:MM:SS, e.g. 06800 - 16/04/2024 - 11:34:38), Value Date-Time, Counterparty Account Number and Name, Correspondent Bank, VA Number, VA Nickname, VA Type, VA Name, Root VA, Parent VA, Current Account Number, Debit Amount, Credit Amount, Running Balance, Currency, Transaction Description.",
+      "business_validation_rule_ids": [
+        "V-14",
+        "V-15"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a Corporate User viewing transaction history WHEN the user reviews a transaction THEN it shows the Section 5.2.3 fields from Transaction Reference Number to Transaction Description",
+        "GIVEN a posting entry with TellerID 4 and Sequence 1234 WHEN it is displayed THEN TellerID-Sequence is shown as 0004-01234",
+        "GIVEN a posting entry with Branch 6800, Host Date 16/04/2024 and PC Time 113438 WHEN it is displayed THEN Branch-Host Date-PC Time is shown as 06800 - 16/04/2024 - 11:34:38",
+        "GIVEN a transaction WHEN it is displayed THEN Value Date-Time is shown as DD/MM/YYYY - HH:MM:SS",
+        "GIVEN a transaction WHEN it is displayed THEN its VA Number, VA Name, VA Type, Root VA, Parent VA and Current Account Number identify where it was attributed"
+      ],
+      "additional_scenarios": [
+        "GIVEN a source field such as Correspondent Bank is empty for a domestic transaction WHEN it is displayed THEN the field is shown empty rather than with placeholder data",
+        "GIVEN a credit transaction WHEN it is displayed THEN the amount appears in Credit Amount and Debit Amount is empty",
+        "GIVEN the user has defined a nickname WHEN the transaction is displayed THEN the VA Nick Name column shows it"
+      ],
+      "ears_requirements": [
+        "The system shall display the Section 5.2.3 transaction fields for each transaction in the history.",
+        "The system shall display TellerID-Sequence as a 4-character TellerID and a 5-character Sequence, each left-padded with zeroes and joined by a hyphen.",
+        "The system shall display Branch-Host Date-PC Time as a 5-character zero-padded branch, the host date as DD/MM/YYYY and the PC time as HH:MM:SS.",
+        "The system shall display Value Date-Time as DD/MM/YYYY - HH:MM:SS.",
+        "Where a source field is empty, the system shall display the field empty and shall not substitute placeholder data."
+      ],
+      "brd_reference": "BF-AS-VA-04 (Virtual Account Transaction History); Section 5.2.3",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-025",
+          "reason": "the fields are shown in the transaction history list",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-028",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-005",
+      "traces": [
+        "ITEM-028"
+      ],
+      "title": "See zero opening, running and closing balance for the period",
+      "description": "As a Corporate User, I want the history to start from a zero opening balance and show a running balance accumulated over my selected period with the closing balance, so that I can see the total attributed to the virtual account within that period.",
+      "priority": "High",
+      "dependencies": "Shares the zero-opening balance convention with statement generation.",
+      "business_validation_rules": "Opening balance is zero; running balance accumulates from the selected start date to the selected end date; closing balance is the final net amount for the period. A virtual account holds no independent balance.",
+      "business_validation_rule_ids": [
+        "V-10"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a Corporate User applies a period on the transaction history WHEN the results load THEN the opening balance is shown as zero",
+        "GIVEN transactions in the period WHEN they are listed in date order THEN each running balance equals the previous running balance plus the credit minus the debit",
+        "GIVEN the period's transactions are listed WHEN the user reviews the closing balance THEN it equals the running balance after the last transaction of the period",
+        "GIVEN the user changes the period WHEN the results reload THEN the running balance restarts from zero at the new start date",
+        "GIVEN a period with no transactions WHEN it is applied THEN the opening and closing balances are both zero"
+      ],
+      "additional_scenarios": [
+        "GIVEN the balances are displayed WHEN the user opens the information hint THEN the system explains that the figures are accumulated for the selected period and are not the current account balance",
+        "GIVEN two transactions with the same value time WHEN the running balance is computed THEN the order is deterministic and identical on screen and in exports",
+        "GIVEN the history is exported WHEN the file is generated THEN it shows the same opening, running and closing balances as the screen"
+      ],
+      "ears_requirements": [
+        "The system shall display a zero opening balance for the selected transaction history period.",
+        "The system shall compute each running balance as the previous running balance plus the credit amount minus the debit amount.",
+        "The system shall display the closing balance as the running balance after the last transaction of the period.",
+        "When the user changes the period, the system shall restart the running balance from zero.",
+        "The system shall present the opening, running and closing balances as period figures and not as the physical account balance."
+      ],
+      "brd_reference": "BF-AS-VA-04, BF-AS-VA-05; Sections 3.2.2, 5.2.3",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-025",
+          "reason": "the balances are shown in the transaction history",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-029",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-005",
+      "traces": [
+        "ITEM-029"
+      ],
+      "title": "View transaction history by VA or by Root VA / Parent",
+      "description": "As a Corporate User, I want to view transaction history for a single virtual account or for a Root VA or Parent account, so that I can review the collections of a whole branch of my hierarchy in one list.",
+      "priority": "Medium",
+      "dependencies": "Uses the entitled hierarchy from US-004.",
+      "business_validation_rules": "History is available by Virtual Account or by Root VA / Parent account; at Root VA / Parent level only entitled descendant VAs are included and each transaction appears once.",
+      "business_validation_rule_ids": [
+        "V-1",
+        "V-5"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a Corporate User on the transaction history WHEN the user chooses the level selector THEN the options By Virtual Account and By Root VA / Parent are offered",
+        "GIVEN the user selects a Root VA or Parent account WHEN the history loads THEN the transactions of its entitled descendant virtual accounts are listed",
+        "GIVEN a Root VA / Parent history WHEN the user reviews a transaction THEN its VA Number identifies the virtual account it was attributed to",
+        "GIVEN descendant accounts the user is not entitled to WHEN the Root VA / Parent history loads THEN their transactions are excluded",
+        "GIVEN a Root VA / Parent history WHEN transactions are listed THEN each transaction appears once and is not duplicated across hierarchy levels"
+      ],
+      "additional_scenarios": [
+        "GIVEN a Root VA / Parent history WHEN the user filters by a VA number THEN the list narrows to that virtual account",
+        "GIVEN a Root VA / Parent history WHEN the 12-month per-query limit is exceeded THEN the same validation as single-account history applies",
+        "GIVEN the user exports a Root VA / Parent history WHEN the file is generated THEN it contains the same entitled transactions"
+      ],
+      "ears_requirements": [
+        "The system shall offer transaction history by Virtual Account and by Root VA / Parent account.",
+        "When a Root VA or Parent account is selected, the system shall list the transactions of its entitled descendant virtual accounts.",
+        "The system shall show the attributed VA Number of every transaction in a Root VA / Parent history.",
+        "The system shall exclude transactions of descendant accounts the user is not entitled to.",
+        "The system shall list each transaction once in a Root VA / Parent history."
+      ],
+      "brd_reference": "BF-AS-VA-04 (Virtual Account Transaction History); Sections 3.2.1, 5.2",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-025",
+          "reason": "the level selector extends the history view",
+          "origin": "brd"
+        },
+        {
+          "story_id": "US-004",
+          "reason": "Root VA / Parent views aggregate the entitled hierarchy",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-030",
+      "epic_id": "E-001",
+      "feature_id": "FEAT-005",
+      "traces": [
+        "ITEM-030"
+      ],
+      "title": "Download or export transaction history in PDF or XLSX",
+      "description": "As a Corporate User, I want to download or export the transaction history for my selected range in PDF or XLSX, so that I can use it for reconciliation in my ERP or spreadsheets.",
+      "priority": "Medium",
+      "dependencies": "Uses the date range selected in US-026 and the level chosen in the history view.",
+      "business_validation_rules": "Transaction History formats are PDF and XLSX without a digital signature; up to 12 months per query; every download is audited.",
+      "business_validation_rule_ids": [
+        "V-5",
+        "V-8",
+        "V-19"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a Corporate User viewing transaction history for a valid range WHEN the user chooses download THEN the formats PDF and XLSX are offered",
+        "GIVEN the user selects a format WHEN the file is generated THEN it contains the transactions of the selected range, level and filters with the Section 5.2.3 fields",
+        "GIVEN the export dialog is open WHEN the user reviews the options THEN no digital signature option is offered for transaction history",
+        "GIVEN the selected range exceeds 12 months WHEN the user requests the export THEN the system rejects the request and states the 12-month maximum",
+        "GIVEN the file cannot be generated WHEN the user requests it THEN the system displays an error and no partial file is downloaded"
+      ],
+      "additional_scenarios": [
+        "GIVEN the export is downloaded WHEN the download completes THEN it is recorded in the audit trail with user identity and timestamp",
+        "GIVEN the range has no transactions WHEN the user requests the export THEN the system informs the user that there are no transactions to export",
+        "GIVEN the XLSX export WHEN it is opened THEN amounts are numeric cells and dates use the displayed formats"
+      ],
+      "ears_requirements": [
+        "The system shall offer the transaction history export in PDF and XLSX only.",
+        "When the user exports transaction history, the system shall include the transactions of the selected range, level and filters.",
+        "The system shall not offer a digital signature option for transaction history exports.",
+        "If the export cannot be generated, then the system shall display an error and shall not download a partial file.",
+        "When a transaction history export is downloaded, the system shall record the download with user identity and timestamp in the audit trail."
+      ],
+      "brd_reference": "BF-AS-VA-04 (Virtual Account Transaction History); Section 3.2.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-026",
+          "reason": "the export uses the selected date range",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-031",
+      "epic_id": "E-002",
+      "feature_id": "FEAT-006",
+      "traces": [
+        "ITEM-031"
+      ],
+      "title": "Generate a statement for one or more virtual accounts",
+      "description": "As a Corporate User, I want to generate a statement for one or multiple virtual accounts for a from-to period I choose, so that I have a formal bank document of the collections for that period.",
+      "priority": "Highest",
+      "dependencies": "Relies on the Corporate Banking System for statement data.",
+      "business_validation_rules": "One or multiple entitled accounts can be selected; the from-to period is at most 12 months and within the historical look-up limit.",
+      "business_validation_rule_ids": [
+        "V-1",
+        "V-5"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN an entitled Corporate User on statement generation WHEN the user selects one virtual account and a from-to period THEN the system generates the statement for that account and period",
+        "GIVEN statement generation WHEN the user selects several virtual accounts THEN the system generates a statement covering each selected account",
+        "GIVEN statement generation WHEN the account selector opens THEN only virtual accounts the user is entitled to are offered",
+        "GIVEN a from-to period longer than 12 months WHEN the user requests the statement THEN the system rejects the request and states the 12-month maximum",
+        "GIVEN a from-date older than the historical look-up limit or later than the to-date WHEN the user requests the statement THEN the system rejects the request with a validation message"
+      ],
+      "additional_scenarios": [
+        "GIVEN no account is selected WHEN the user requests a statement THEN the system asks the user to select at least one account",
+        "GIVEN the statement service is unavailable WHEN the user requests a statement THEN the system displays a service-unavailable message",
+        "GIVEN the statement is downloaded WHEN the download completes THEN it is recorded in the audit trail with user identity and timestamp"
+      ],
+      "ears_requirements": [
+        "When the user selects one or more entitled virtual accounts and a from-to period, the system shall generate a statement for the selection.",
+        "The system shall offer only entitled virtual accounts for statement generation.",
+        "If the statement period exceeds 12 months, then the system shall reject the request and state the 12-month maximum.",
+        "If the from-date is older than the look-up limit or later than the to-date, then the system shall reject the request with a validation message.",
+        "If no account is selected, then the system shall request the selection of at least one account."
+      ],
+      "brd_reference": "BF-AS-VA-05 (Statement Generation); Sections 3.2.1, 5.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-007",
+          "reason": "accounts are selected from the entitled virtual accounts",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-032",
+      "epic_id": "E-002",
+      "feature_id": "FEAT-006",
+      "traces": [
+        "ITEM-032"
+      ],
+      "title": "Receive statement content with zero opening balance",
+      "description": "As a Corporate User, I want the statement to start from a zero opening balance and include sender, beneficiary and transaction details with the fee breakdown and VAT, so that I can reconcile each receipt against my receivables.",
+      "priority": "High",
+      "dependencies": "Shares the balance convention of US-028.",
+      "business_validation_rules": "Opening balance is zero. Content per document table: counterparty / sender account number, name (for credits) and sending bank; beneficiary VA number, name (for credits) and Current Account number; date and timestamp dd/mm/yy hh:mm:ss; transaction reference number; amount and currency; fee breakdown and VAT.",
+      "business_validation_rule_ids": [
+        "V-10"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a generated statement WHEN the user opens it THEN the opening balance is zero",
+        "GIVEN a credit transaction on the statement WHEN the user reviews it THEN the sender account number, sender name and sending bank are shown",
+        "GIVEN a transaction on the statement WHEN the user reviews it THEN the beneficiary VA number, VA name and Current Account number are shown",
+        "GIVEN a transaction on the statement WHEN the user reviews it THEN the date and timestamp in dd/mm/yy hh:mm:ss, the transaction reference number, the amount and currency are shown",
+        "GIVEN a transaction with fees WHEN the user reviews it THEN the fee breakdown and VAT are shown"
+      ],
+      "additional_scenarios": [
+        "GIVEN a statement for several accounts WHEN it is generated THEN each account's section starts from a zero opening balance",
+        "GIVEN a period with no transactions WHEN the statement is generated THEN it shows the account details with zero opening and closing balances",
+        "GIVEN the statement is generated in different formats WHEN the files are compared THEN they carry the same transactions and balances"
+      ],
+      "ears_requirements": [
+        "The system shall show a zero opening balance on every virtual account statement.",
+        "The system shall show the sender account number, sender name and sending bank for credit transactions on the statement.",
+        "The system shall show the beneficiary VA number, VA name and Current Account number for each statement transaction.",
+        "The system shall show the date and timestamp in dd/mm/yy hh:mm:ss, the transaction reference number, the amount and the currency for each statement transaction.",
+        "The system shall show the fee breakdown and VAT for statement transactions that carry fees."
+      ],
+      "brd_reference": "BF-AS-VA-05 (Statement Generation); Sections 3.2.1, 3.2.2",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-031",
+          "reason": "content is produced for the generated statement",
+          "origin": "brd"
+        },
+        {
+          "story_id": "US-028",
+          "reason": "uses the same zero-opening running balance convention",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-033",
+      "epic_id": "E-002",
+      "feature_id": "FEAT-006",
+      "traces": [
+        "ITEM-033"
+      ],
+      "title": "Download the statement in PDF, XLSX or CSV",
+      "description": "As a Corporate User, I want to download the statement in PDF, XLSX or CSV, so that I can file it or load it into my ERP or treasury system.",
+      "priority": "High",
+      "dependencies": "None beyond US-031.",
+      "business_validation_rules": "Statement formats are PDF, XLSX and CSV only; every download is audited.",
+      "business_validation_rule_ids": [
+        "V-8",
+        "V-19"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN statement generation WHEN the user opens the format selector THEN PDF, XLSX and CSV are offered and no other format",
+        "GIVEN the user selects PDF WHEN the statement is generated THEN a PDF statement is downloaded",
+        "GIVEN the user selects XLSX WHEN the statement is generated THEN an XLSX statement is downloaded",
+        "GIVEN the user selects CSV WHEN the statement is generated THEN a CSV statement is downloaded",
+        "GIVEN the file cannot be produced WHEN the user requests it THEN the system displays an error and no partial file is downloaded"
+      ],
+      "additional_scenarios": [
+        "GIVEN a statement download completes WHEN it is recorded THEN the audit trail holds user identity, timestamp, accounts and period",
+        "GIVEN the CSV format WHEN it is opened THEN each transaction is one row with the statement fields as columns",
+        "GIVEN the XLSX format WHEN it is opened THEN amounts are numeric cells"
+      ],
+      "ears_requirements": [
+        "The system shall offer the virtual account statement in PDF, XLSX and CSV only.",
+        "When the user selects a statement format, the system shall produce the statement in that format.",
+        "If the statement file cannot be produced, then the system shall display an error and shall not download a partial file.",
+        "When a statement is downloaded, the system shall record the download with user identity and timestamp in the audit trail.",
+        "The system shall produce identical transaction content in every statement format."
+      ],
+      "brd_reference": "BF-AS-VA-05 (Statement Generation); Section 3.2.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-031",
+          "reason": "formats apply to the generated statement",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-034",
+      "epic_id": "E-002",
+      "feature_id": "FEAT-006",
+      "traces": [
+        "ITEM-034"
+      ],
+      "title": "Choose a digitally signed PDF statement",
+      "description": "As a Corporate User, I want to choose a digitally signed statement when I download it as PDF, so that I can present an authenticated bank document to auditors or counterparties.",
+      "priority": "Medium",
+      "dependencies": "Relies on the bank's digital signature service. Any fee is defined in the Fees & Charges BRD (BND-001).",
+      "business_validation_rules": "A digital signature is available only for the PDF format; it may incur a fee defined in the Fees & Charges BRD.",
+      "business_validation_rule_ids": [
+        "V-9"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN the user selects PDF for a statement WHEN the options are shown THEN the user can choose with or without digital signature",
+        "GIVEN the user selects XLSX or CSV WHEN the options are shown THEN no digital signature option is offered",
+        "GIVEN the user chooses a digitally signed PDF WHEN the statement is generated THEN the downloaded PDF carries the bank's digital signature",
+        "GIVEN a signature may incur a fee WHEN the user chooses the signed option THEN the system informs the user that a fee may apply before generation",
+        "GIVEN the digital signature service is unavailable WHEN the user requests a signed PDF THEN the system states that the signature service is temporarily unavailable and does not deliver an unsigned file as signed"
+      ],
+      "additional_scenarios": [
+        "GIVEN the signature service is unavailable WHEN the user chooses to continue without signature THEN an unsigned PDF is generated",
+        "GIVEN a signed PDF WHEN it is opened in a standard PDF reader THEN the signature can be verified",
+        "GIVEN a signed statement download WHEN it is audited THEN the audit record shows that a signed document was produced"
+      ],
+      "ears_requirements": [
+        "Where the PDF format is selected for a statement, the system shall offer the options with and without digital signature.",
+        "Where the XLSX or CSV format is selected, the system shall not offer a digital signature option.",
+        "When a signed PDF is requested, the system shall produce a PDF carrying the bank's digital signature.",
+        "When the user chooses the signed option, the system shall inform the user that a fee may apply.",
+        "If the digital signature service is unavailable, then the system shall state that it is temporarily unavailable and shall not label an unsigned file as signed."
+      ],
+      "brd_reference": "BF-AS-VA-05 (Statement Generation); Section 3.2.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-033",
+          "reason": "the signature option applies to the PDF format",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-035",
+      "epic_id": "E-002",
+      "feature_id": "FEAT-006",
+      "traces": [
+        "ITEM-035"
+      ],
+      "title": "Generate statements above 10,000 records",
+      "description": "As a Corporate User, I want to generate statements whose record volume exceeds the current 10,000-record limitation, so that high-volume collection accounts can still get a complete statement.",
+      "priority": "High",
+      "dependencies": "The generation approach for large volumes is a solution-design decision.",
+      "business_validation_rules": "Statements must support large record volumes beyond the current 10,000-records-per-statement limitation; the statement must remain complete.",
+      "business_validation_rule_ids": [
+        "V-18"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a statement request whose period contains more than 10,000 records WHEN the user submits it THEN the system accepts the request instead of rejecting it for volume",
+        "GIVEN a large-volume statement WHEN it is delivered THEN it contains every record of the selected accounts and period",
+        "GIVEN a large-volume statement takes longer than an interactive response WHEN it is submitted THEN the system informs the user how and when the statement will be available",
+        "GIVEN a large-volume statement is ready WHEN the user retrieves it THEN it is downloadable in the format the user selected",
+        "GIVEN large-volume generation fails WHEN the failure occurs THEN the user is informed that the statement could not be produced and no incomplete statement is delivered"
+      ],
+      "additional_scenarios": [
+        "GIVEN a statement of exactly 10,000 records WHEN it is requested THEN it is produced like any other statement",
+        "GIVEN a large-volume statement is delivered in several parts WHEN the user receives them THEN the parts are numbered and together hold all records",
+        "GIVEN a large-volume statement download completes WHEN it is recorded THEN it is audited like any other statement download"
+      ],
+      "ears_requirements": [
+        "When a statement request exceeds 10,000 records, the system shall accept and process the request.",
+        "The system shall include every record of the selected accounts and period in a large-volume statement.",
+        "While a large-volume statement is being produced, the system shall inform the user how and when it will be available.",
+        "If large-volume generation fails, then the system shall inform the user and shall not deliver an incomplete statement.",
+        "When a large-volume statement is delivered in several parts, the system shall number the parts so that together they hold all records."
+      ],
+      "brd_reference": "BF-AS-VA-05 (Statement Generation); Section 5.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-031",
+          "reason": "large-volume handling applies to statement generation",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-036",
+      "epic_id": "E-002",
+      "feature_id": "FEAT-007",
+      "traces": [
+        "ITEM-036"
+      ],
+      "title": "Generate account confirmation for Active virtual accounts",
+      "description": "As a Corporate User, I want to generate an account information / existence confirmation for one or more Active virtual accounts, so that I can prove the accounts' details to auditors or business partners.",
+      "priority": "High",
+      "dependencies": "Relies on the Corporate Banking System for account status and details.",
+      "business_validation_rules": "Confirmation applies to Active accounts only; one or more entitled accounts can be selected.",
+      "business_validation_rule_ids": [
+        "V-1",
+        "V-11",
+        "V-21"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN an entitled Corporate User on account confirmation WHEN the account selector opens THEN only entitled virtual accounts in Active status are selectable",
+        "GIVEN the user selects one Active account WHEN the user requests the confirmation THEN the system generates an account information confirmation for that account",
+        "GIVEN the user selects several Active accounts WHEN the user requests the confirmation THEN the system generates a confirmation covering each selected account",
+        "GIVEN a Closed account WHEN the user attempts to include it THEN the system prevents the selection and explains that confirmations apply to Active accounts only",
+        "GIVEN account data cannot be retrieved WHEN the user requests the confirmation THEN the system displays a service-unavailable message"
+      ],
+      "additional_scenarios": [
+        "GIVEN an account becomes Closed between selection and submission WHEN the request is submitted THEN the system rejects that account and explains why",
+        "GIVEN no account is selected WHEN the user requests a confirmation THEN the system asks for at least one Active account",
+        "GIVEN the confirmation is downloaded WHEN the download completes THEN it is recorded in the audit trail"
+      ],
+      "ears_requirements": [
+        "The system shall offer only entitled virtual accounts in Active status for account confirmation.",
+        "When the user requests a confirmation for one or more Active accounts, the system shall generate an account information confirmation covering each selected account.",
+        "If the user attempts to include a non-Active account, then the system shall prevent the selection and explain the Active-only rule.",
+        "If an account is no longer Active at submission, then the system shall reject that account and explain why.",
+        "If account data cannot be retrieved, then the system shall display a service-unavailable message."
+      ],
+      "brd_reference": "BF-AS-VA-06 (Account Confirmation); Sections 3.2.1, 5.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-007",
+          "reason": "accounts are selected from the entitled virtual accounts",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-037",
+      "epic_id": "E-002",
+      "feature_id": "FEAT-007",
+      "traces": [
+        "ITEM-037"
+      ],
+      "title": "Restrict account confirmation to same-day requests",
+      "description": "As a Corporate User, I want account confirmation requests to be limited to the same day, so that the confirmation always reflects the account information on the day it is requested.",
+      "priority": "Medium",
+      "dependencies": "The precise meaning of 'same day' awaits VCB confirmation.",
+      "business_validation_rules": "Account confirmation requests are applicable for the same day only.",
+      "business_validation_rule_ids": [
+        "V-11"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a Corporate User requests an account confirmation WHEN the request form opens THEN the confirmation date is set to the current business day and cannot be changed",
+        "GIVEN a confirmation is generated WHEN the user opens it THEN it states the date as of which the account information is confirmed",
+        "GIVEN a user attempts to request a confirmation for a past or future date WHEN the request is submitted THEN the system rejects it and explains the same-day rule",
+        "GIVEN a confirmation request is submitted WHEN it is processed THEN it uses the account information of the request day",
+        "GIVEN the confirmation service is unavailable WHEN the user submits on the day THEN the system displays a service-unavailable message"
+      ],
+      "additional_scenarios": [
+        "GIVEN the user opened the request form before midnight and submits after midnight WHEN the request is processed THEN the confirmation date is the business day of submission",
+        "GIVEN a confirmation was generated earlier today WHEN the user requests another one today THEN a new confirmation is generated",
+        "GIVEN the same-day rule is applied WHEN the user views the form THEN a hint explains that confirmations are for the current day only"
+      ],
+      "ears_requirements": [
+        "The system shall set the account confirmation date to the current business day and shall not allow it to be changed.",
+        "The system shall state on the confirmation the date as of which the account information is confirmed.",
+        "If a confirmation is requested for a past or future date, then the system shall reject the request and explain the same-day rule.",
+        "When a confirmation request is processed, the system shall use the account information of the request day.",
+        "If the confirmation service is unavailable, then the system shall display a service-unavailable message."
+      ],
+      "brd_reference": "BF-AS-VA-06 (Account Confirmation); Section 3.2.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-036",
+          "reason": "the same-day rule applies to the confirmation request",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-038",
+      "epic_id": "E-002",
+      "feature_id": "FEAT-007",
+      "traces": [
+        "ITEM-038"
+      ],
+      "title": "Receive account confirmation as PDF with optional signature",
+      "description": "As a Corporate User, I want to receive the account confirmation as a PDF with or without a digital signature, so that I can choose an authenticated document when a third party requires it.",
+      "priority": "Medium",
+      "dependencies": "Relies on the bank's digital signature service. Any fee is defined in the Fees & Charges BRD (BND-001).",
+      "business_validation_rules": "Account information confirmation format is PDF only; a digital signature is optional and only for PDF; it may incur a fee.",
+      "business_validation_rule_ids": [
+        "V-8",
+        "V-9",
+        "V-19"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a Corporate User requests an account confirmation WHEN the format options are shown THEN PDF is the only format offered",
+        "GIVEN the PDF format WHEN the options are shown THEN the user can choose with or without digital signature",
+        "GIVEN the user chooses the signed option WHEN the confirmation is generated THEN the PDF carries the bank's digital signature",
+        "GIVEN the user chooses the signed option WHEN the options are confirmed THEN the system informs the user that a fee may apply",
+        "GIVEN the digital signature service is unavailable WHEN a signed confirmation is requested THEN the system states that the signature service is temporarily unavailable and does not deliver an unsigned file as signed"
+      ],
+      "additional_scenarios": [
+        "GIVEN the confirmation is downloaded WHEN the download completes THEN the audit trail records user identity, timestamp and whether it was signed",
+        "GIVEN a signed confirmation WHEN it is opened in a standard PDF reader THEN the signature can be verified",
+        "GIVEN a confirmation for several accounts WHEN it is generated THEN all accounts appear in the PDF"
+      ],
+      "ears_requirements": [
+        "The system shall produce the account information confirmation in PDF only.",
+        "The system shall offer the account confirmation with and without digital signature.",
+        "When a signed confirmation is requested, the system shall produce a PDF carrying the bank's digital signature.",
+        "When the signed option is chosen, the system shall inform the user that a fee may apply.",
+        "If the digital signature service is unavailable, then the system shall state that it is temporarily unavailable and shall not label an unsigned file as signed."
+      ],
+      "brd_reference": "BF-AS-VA-06 (Account Confirmation); Section 3.2.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-036",
+          "reason": "the output applies to the generated confirmation",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-039",
+      "epic_id": "E-003",
+      "feature_id": "FEAT-008",
+      "traces": [
+        "ITEM-039"
+      ],
+      "title": "Mark and unmark favorite virtual accounts",
+      "description": "As a Corporate User, I want to mark and unmark virtual accounts as favorites so that they are pinned to the top of my account list, so that the accounts I reconcile daily are always first.",
+      "priority": "Medium",
+      "dependencies": "Favorites drive Rule 1 of the default list order.",
+      "business_validation_rules": "Favorites are stored at user-profile level and shown at the top of the account list in order of priority.",
+      "business_validation_rule_ids": [
+        "V-3",
+        "V-12"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a Corporate User on the account list WHEN the user marks a virtual account as favorite THEN the account is flagged as favorite and pinned to the top of the list",
+        "GIVEN a favorite account WHEN the user unmarks it THEN the favorite flag is removed and the account returns to its default position",
+        "GIVEN favorites are set WHEN the user signs in again THEN the same accounts are still favorites",
+        "GIVEN two users of the same company WHEN one marks a favorite THEN the other user's favorites are unaffected",
+        "GIVEN the favorite cannot be saved WHEN the user marks it THEN the system informs the user and leaves the account unflagged"
+      ],
+      "additional_scenarios": [
+        "GIVEN a favorite account's entitlement is removed WHEN the list loads THEN the account is not shown and does not count toward the favorite limit",
+        "GIVEN favorites on Web WHEN the user signs in on Mobile THEN the same favorites are shown",
+        "GIVEN a Closed favorite within the 12-month window WHEN the list loads THEN it remains a favorite with its Closed status shown"
+      ],
+      "ears_requirements": [
+        "When the user marks a virtual account as favorite, the system shall flag it and pin it to the top of the account list.",
+        "When the user unmarks a favorite, the system shall remove the flag and return the account to its default position.",
+        "The system shall store favorites at user-profile level and keep them across sessions and channels.",
+        "The system shall keep each user's favorites independent of other users.",
+        "If a favorite cannot be saved, then the system shall inform the user and leave the account unflagged."
+      ],
+      "brd_reference": "BF-AS-VA-07 (Personalization, Customization & Utilities); Sections 3.2.1, 5.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-007",
+          "reason": "favorites are marked on the consolidated list",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-040",
+      "epic_id": "E-003",
+      "feature_id": "FEAT-008",
+      "traces": [
+        "ITEM-040"
+      ],
+      "title": "Limit favorites to 10 accounts",
+      "description": "As a Corporate User, I want to be told when I reach the maximum of 10 favorite accounts, so that I understand why I cannot pin another account and can choose which one to replace.",
+      "priority": "Low",
+      "dependencies": "Extends US-039.",
+      "business_validation_rules": "At most 10 favorite accounts per user (described as the recommended maximum in BF-AS-VA-07).",
+      "business_validation_rule_ids": [
+        "V-12"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a user with fewer than 10 favorites WHEN the user marks another account THEN the favorite is saved",
+        "GIVEN a user with 10 favorites WHEN the user tries to mark an eleventh account THEN the system prevents it and states the 10-favorite maximum",
+        "GIVEN the maximum is reached WHEN the user unmarks a favorite THEN the user can mark another account",
+        "GIVEN the maximum message is shown WHEN the user reviews it THEN it suggests removing an existing favorite to add a new one",
+        "GIVEN the limit check cannot be performed WHEN the user marks a favorite THEN the system does not save the favorite and informs the user"
+      ],
+      "additional_scenarios": [
+        "GIVEN favorites set on Web and Mobile WHEN counted THEN the 10-favorite limit applies across both channels",
+        "GIVEN 10 favorites WHEN the user views the list THEN all 10 are pinned in the favorites group",
+        "GIVEN a favorite becomes unentitled WHEN the limit is checked THEN it does not count toward the 10"
+      ],
+      "ears_requirements": [
+        "While the user has fewer than 10 favorites, the system shall allow another account to be marked as favorite.",
+        "If the user attempts to mark more than 10 favorites, then the system shall prevent it and state the 10-favorite maximum.",
+        "When a favorite is unmarked at the maximum, the system shall allow a new favorite to be marked.",
+        "The system shall apply the 10-favorite limit per user across Web and Mobile.",
+        "The system shall not count unentitled accounts toward the favorite limit."
+      ],
+      "brd_reference": "BF-AS-VA-07 (Personalization, Customization & Utilities); Section 3.2.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-039",
+          "reason": "the limit applies to marking favorites",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-041",
+      "epic_id": "E-003",
+      "feature_id": "FEAT-008",
+      "traces": [
+        "ITEM-041"
+      ],
+      "title": "Create, update or delete a nickname up to 30 characters",
+      "description": "As a Corporate User, I want to create, update or delete a nickname of up to 30 characters for a virtual account, so that I can recognize accounts faster during daily reconciliation.",
+      "priority": "Medium",
+      "dependencies": "Nicknames are displayed in the list, details and history views.",
+      "business_validation_rules": "Nicknames are stored at user-profile level, are at most 30 characters (recommended length in BF-AS-VA-07) and do not change the bank's account name.",
+      "business_validation_rule_ids": [
+        "V-13"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a virtual account without a nickname WHEN the user enters a nickname of up to 30 characters and saves THEN the nickname is stored for that account",
+        "GIVEN a virtual account with a nickname WHEN the user edits it and saves THEN the updated nickname replaces the previous one",
+        "GIVEN a virtual account with a nickname WHEN the user deletes it THEN the nickname is removed and the field shows empty",
+        "GIVEN the user enters more than 30 characters WHEN the user tries to save THEN the system prevents saving and states the 30-character limit",
+        "GIVEN the nickname cannot be saved WHEN the user saves THEN the system informs the user and keeps the previous value"
+      ],
+      "additional_scenarios": [
+        "GIVEN a nickname containing only spaces WHEN the user saves THEN it is treated as deleting the nickname",
+        "GIVEN two users of the same company WHEN one sets a nickname THEN the other user does not see it",
+        "GIVEN a nickname with Vietnamese diacritics WHEN it is saved THEN it is stored and displayed exactly as entered"
+      ],
+      "ears_requirements": [
+        "When the user saves a nickname of up to 30 characters, the system shall store it for that virtual account at user-profile level.",
+        "When the user edits or deletes a nickname, the system shall update or remove it.",
+        "If a nickname longer than 30 characters is entered, then the system shall prevent saving and state the 30-character limit.",
+        "The system shall not change the bank's virtual account name when a nickname is saved.",
+        "If the nickname cannot be saved, then the system shall inform the user and keep the previous value."
+      ],
+      "brd_reference": "BF-AS-VA-07 (Personalization, Customization & Utilities); Sections 3.2.1, 5.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-007",
+          "reason": "nicknames are maintained from the account list or details",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-042",
+      "epic_id": "E-003",
+      "feature_id": "FEAT-008",
+      "traces": [
+        "ITEM-042"
+      ],
+      "title": "See my nickname across list, details and history",
+      "description": "As a Corporate User, I want the nickname I defined to be shown in the account list, account details and transaction history, so that I can recognize the account wherever it appears.",
+      "priority": "Low",
+      "dependencies": "Displays nicknames created in US-041.",
+      "business_validation_rules": "The Nickname field appears in the account list, account details and transaction history; it is empty when no nickname is defined and is searchable.",
+      "business_validation_rule_ids": [
+        "V-13",
+        "V-16"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN the user has set a nickname WHEN the user opens the account list THEN the nickname column shows it",
+        "GIVEN the user has set a nickname WHEN the user opens the account details THEN the nickname field shows it",
+        "GIVEN the user has set a nickname WHEN the user views the transaction history THEN the VA Nick Name field shows it",
+        "GIVEN the user has not set a nickname WHEN any of these views is displayed THEN the nickname field is empty",
+        "GIVEN the user searches by part of a nickname WHEN the search runs THEN the matching account is returned"
+      ],
+      "additional_scenarios": [
+        "GIVEN the user updates a nickname WHEN any view is refreshed THEN the new nickname is shown",
+        "GIVEN another user's nickname for the same account WHEN this user views the account THEN only this user's own nickname is shown",
+        "GIVEN an export of the list or history WHEN it is generated THEN it shows the user's nickname"
+      ],
+      "ears_requirements": [
+        "The system shall display the user's nickname in the account list, account details and transaction history.",
+        "Where no nickname is defined, the system shall display an empty nickname field.",
+        "The system shall include nicknames in account search and filters.",
+        "When a nickname is updated, the system shall display the new value in all views.",
+        "The system shall display only the viewing user's own nickname."
+      ],
+      "brd_reference": "BF-AS-VA-07; Sections 5.2.1, 5.2.2, 5.2.3",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-041",
+          "reason": "the nickname must exist before it is displayed",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-043",
+      "epic_id": "E-003",
+      "feature_id": "FEAT-009",
+      "traces": [
+        "ITEM-043"
+      ],
+      "title": "Generate a QR code with the virtual account information",
+      "description": "As a Corporate User, I want to generate a QR code with the account information of a selected virtual account, so that my payers can scan it and pay into the right virtual account.",
+      "priority": "Medium",
+      "dependencies": "The QR payload standard is not specified in the BRD and must follow the bank's approved payment QR scheme.",
+      "business_validation_rules": "The QR code contains the account information of the selected entitled virtual account and is produced as an image.",
+      "business_validation_rule_ids": [
+        "V-1"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN an entitled Corporate User on a virtual account WHEN the user selects Generate QR code THEN the system generates a QR image containing that virtual account's information",
+        "GIVEN the QR image is generated WHEN it is displayed THEN the VA number and VA name are shown beside the image for confirmation",
+        "GIVEN a Closed virtual account WHEN the user views it THEN the Generate QR code option is not available",
+        "GIVEN a virtual account the user is not entitled to WHEN a QR generation is requested THEN the system denies it",
+        "GIVEN QR generation fails WHEN the user requests it THEN the system displays an error and no image is produced"
+      ],
+      "additional_scenarios": [
+        "GIVEN the generated QR WHEN it is scanned by an app supporting the bank's payment QR scheme THEN the virtual account number is read correctly",
+        "GIVEN the user regenerates the QR code WHEN nothing has changed THEN the same account information is encoded",
+        "GIVEN the QR code is generated WHEN the action completes THEN it is recorded in the audit trail"
+      ],
+      "ears_requirements": [
+        "When the user selects Generate QR code for an entitled virtual account, the system shall produce a QR image containing that account's information.",
+        "The system shall display the VA number and VA name with the generated QR image.",
+        "The system shall not offer QR generation for Closed virtual accounts.",
+        "If QR generation is requested for an unentitled account, then the system shall deny it.",
+        "If QR generation fails, then the system shall display an error and shall not produce an image."
+      ],
+      "brd_reference": "BF-AS-VA-07 (Personalization, Customization & Utilities); Sections 3.2.2, 5.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-020",
+          "reason": "the QR code is generated for a selected virtual account",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-044",
+      "epic_id": "E-003",
+      "feature_id": "FEAT-009",
+      "traces": [
+        "ITEM-044"
+      ],
+      "title": "Add an amount and payment description to the QR code",
+      "description": "As a Corporate User, I want to enter an amount and a payment description before generating the QR code, so that my payer pays the exact amount with a reference I can reconcile.",
+      "priority": "Low",
+      "dependencies": "Extends US-043; field limits follow the bank's payment QR scheme.",
+      "business_validation_rules": "Amount and payment description are optional manual inputs; the amount must be a positive number in the account currency.",
+      "business_validation_rule_ids": [
+        "V-1"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN the QR generation screen WHEN the user opens it THEN optional fields for amount and payment description are shown",
+        "GIVEN the user enters a valid amount and description WHEN the QR code is generated THEN the QR encodes the account information, the amount and the description",
+        "GIVEN the user leaves both fields empty WHEN the QR code is generated THEN the QR encodes the account information only",
+        "GIVEN the user enters a zero, negative or non-numeric amount WHEN the user generates the QR THEN the system rejects the amount with a validation message",
+        "GIVEN the description exceeds the length allowed by the payment QR scheme WHEN the user generates the QR THEN the system prevents generation and states the limit"
+      ],
+      "additional_scenarios": [
+        "GIVEN an amount is entered WHEN it is displayed THEN it shows the virtual account currency",
+        "GIVEN the user changes the amount WHEN the QR is regenerated THEN the new amount is encoded",
+        "GIVEN a description with Vietnamese diacritics WHEN it is encoded THEN it follows the character rules of the payment QR scheme"
+      ],
+      "ears_requirements": [
+        "The system shall offer optional amount and payment description fields when generating a QR code.",
+        "When an amount and description are entered, the system shall encode them with the account information in the QR code.",
+        "When the optional fields are empty, the system shall encode only the account information.",
+        "If the amount is zero, negative or non-numeric, then the system shall reject it with a validation message.",
+        "If the description exceeds the allowed length, then the system shall prevent generation and state the limit."
+      ],
+      "brd_reference": "BF-AS-VA-07 (Personalization, Customization & Utilities); Section 5.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-043",
+          "reason": "amount and description extend the QR code",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-045",
+      "epic_id": "E-003",
+      "feature_id": "FEAT-009",
+      "traces": [
+        "ITEM-045"
+      ],
+      "title": "Download or share the QR code in-app",
+      "description": "As a Corporate User, I want to download the QR code image or share it in-app, so that I can send it to my payers through the channel they use.",
+      "priority": "Low",
+      "dependencies": "Extends US-043.",
+      "business_validation_rules": "The QR code is available for download or in-app sharing in a visual image format.",
+      "business_validation_rule_ids": [
+        "V-19"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a generated QR code WHEN the user selects Download THEN the QR image is saved to the user's device",
+        "GIVEN a generated QR code on Mobile WHEN the user selects Share THEN the device share options open with the QR image attached",
+        "GIVEN a generated QR code WHEN it is downloaded or shared THEN the image is in a standard image format",
+        "GIVEN a downloaded QR image WHEN it is opened THEN it shows the QR code and the VA number and name",
+        "GIVEN the download or share fails WHEN the user retries THEN the system informs the user of the failure"
+      ],
+      "additional_scenarios": [
+        "GIVEN the user cancels the share sheet WHEN it closes THEN the QR code remains on screen",
+        "GIVEN the QR is downloaded WHEN the download completes THEN it is recorded in the audit trail",
+        "GIVEN Web without native sharing WHEN the user views the QR THEN Download is offered"
+      ],
+      "ears_requirements": [
+        "When the user selects Download, the system shall save the QR code as an image to the device.",
+        "When the user selects Share on Mobile, the system shall open the device share options with the QR image.",
+        "The system shall produce the QR code in a standard image format.",
+        "If the download or share fails, then the system shall inform the user.",
+        "When a QR code is downloaded, the system shall record the download in the audit trail."
+      ],
+      "brd_reference": "BF-AS-VA-07 (Personalization, Customization & Utilities); Sections 3.2.2, 5.1",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": [
+        {
+          "story_id": "US-043",
+          "reason": "the QR image must be generated first",
+          "origin": "brd"
+        }
+      ]
+    },
+    {
+      "story_id": "US-046",
+      "epic_id": "E-004",
+      "feature_id": "FEAT-010",
+      "traces": [
+        "ITEM-046"
+      ],
+      "title": "Receive real-time credit notifications on Mobile, Email and Web",
+      "description": "As a Corporate User, I want to receive a real-time notification on Mobile, Email and Web when a credit is posted to a virtual account I am entitled to, so that I can act on incoming collections immediately.",
+      "priority": "High",
+      "dependencies": "Relies on the Corporate Banking System credit events and the platform notification service for push and email delivery.",
+      "business_validation_rules": "A credit notification is pushed in real time with the credit transaction to corporate users via Mobile, Email and Web; only users entitled to the virtual account receive it.",
+      "business_validation_rule_ids": [
+        "V-1",
+        "V-20"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN an entitled Corporate User WHEN a credit transaction is posted to an entitled virtual account THEN the system sends a credit notification in real time",
+        "GIVEN a credit notification is sent WHEN the user receives it THEN it is delivered on Mobile, Email and Web",
+        "GIVEN a credit notification WHEN the user reads it THEN it shows the virtual account, credit amount, currency and transaction time",
+        "GIVEN a user not entitled to the virtual account WHEN a credit is posted THEN that user receives no notification",
+        "GIVEN delivery on one channel fails WHEN the notification is sent THEN delivery on the other channels is unaffected and the failure is logged"
+      ],
+      "additional_scenarios": [
+        "GIVEN the same credit event is received twice WHEN notifications are sent THEN the user receives only one notification for that transaction",
+        "GIVEN the user selects a Web notification WHEN it is opened THEN the system shows the virtual account's transaction",
+        "GIVEN the notification contains payer details WHEN it is sent THEN it follows the bank's data privacy policy for personal data"
+      ],
+      "ears_requirements": [
+        "When a credit transaction is posted to a virtual account, the system shall send a real-time credit notification to each entitled corporate user.",
+        "The system shall deliver credit notifications on Mobile, Email and Web.",
+        "The system shall include the virtual account, credit amount, currency and transaction time in the notification.",
+        "The system shall not notify users who are not entitled to the virtual account.",
+        "If delivery fails on one channel, then the system shall continue delivery on the other channels and log the failure."
+      ],
+      "brd_reference": "Section 6 (Notifications & Alerts)",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": []
+    },
+    {
+      "story_id": "US-047",
+      "epic_id": "E-004",
+      "feature_id": "FEAT-011",
+      "traces": [
+        "ITEM-047"
+      ],
+      "title": "Enforce hierarchy-level entitlements on every view and download",
+      "description": "As a Corporate User, I want every view, search, count and download to include only the virtual accounts my entitlements allow at Current Account, Root VA, Parent VA or VA level, so that I never see other units' collection data.",
+      "priority": "Highest",
+      "dependencies": "Relies on the entitlements configured in the Corporate Banking System (BND-002). Cross-cutting control used by all inquiry stories.",
+      "business_validation_rules": "Permissions are managed by Current Account, Root VA, Parent VA or VA number. The module is a UI that aggregates Corporate Banking System data and works with the entitlements configured there. Personal data follows Vietnam's Law on Cybersecurity and the bank's privacy policy.",
+      "business_validation_rule_ids": [
+        "V-1",
+        "V-2",
+        "V-20"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a user entitled at Current Account level WHEN the user inquires THEN all virtual accounts under that current account are available",
+        "GIVEN a user entitled at Root VA or Parent VA level WHEN the user inquires THEN only virtual accounts under that Root VA or Parent VA are available",
+        "GIVEN a user entitled to individual VAs WHEN the user inquires THEN only those virtual accounts are available",
+        "GIVEN any search, filter, count, aggregate or export WHEN it is computed THEN it includes only the user's entitled virtual accounts",
+        "GIVEN a user requests data for an unentitled virtual account by any route WHEN the request is made THEN the system denies access and shows a no-access message"
+      ],
+      "additional_scenarios": [
+        "GIVEN an entitlement change in the Corporate Banking System WHEN the user next loads a view THEN the new entitlement is applied",
+        "GIVEN the entitlement service is unavailable WHEN the user opens the module THEN no account data is shown and a service-unavailable message is displayed",
+        "GIVEN an access denial WHEN it occurs THEN it is recorded in the audit trail"
+      ],
+      "ears_requirements": [
+        "The system shall apply the entitlements configured in the Corporate Banking System at Current Account, Root VA, Parent VA or VA level to every virtual account view.",
+        "The system shall include only entitled virtual accounts in every search, filter, count, aggregate and export.",
+        "If a user requests data for an unentitled virtual account, then the system shall deny access and display a no-access message.",
+        "When an entitlement changes, the system shall apply the new entitlement on the next request.",
+        "If the entitlement service is unavailable, then the system shall show no account data and display a service-unavailable message."
+      ],
+      "brd_reference": "Sections 3.1, 5.2, 7",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": []
+    },
+    {
+      "story_id": "US-048",
+      "epic_id": "E-004",
+      "feature_id": "FEAT-011",
+      "traces": [
+        "ITEM-048"
+      ],
+      "title": "Record an audit trail of access and downloads",
+      "description": "As a Bank Compliance Officer, I want every access to virtual account information and every download recorded with user identity and timestamp, so that the bank can evidence who viewed or extracted data for the regulatory retention period.",
+      "priority": "High",
+      "dependencies": "Relies on the platform audit store; the retention period is the regulatory minimum.",
+      "business_validation_rules": "The audit trail tracks all access and downloads with user identity and timestamp and is retained for the regulatory minimum period.",
+      "business_validation_rule_ids": [
+        "V-19",
+        "V-20"
+      ],
+      "channel": "Both",
+      "acceptance_criteria": [
+        "GIVEN a Corporate User opens any virtual account view WHEN the view is served THEN an audit record is written with user identity, timestamp, view and accounts accessed",
+        "GIVEN a Corporate User downloads any list, history, statement, confirmation or QR image WHEN the download completes THEN an audit record is written with user identity, timestamp, document type and accounts",
+        "GIVEN audit records exist WHEN the retention period has not elapsed THEN the records are retained and cannot be altered",
+        "GIVEN the audit store is unavailable WHEN a user requests a download THEN the download is not delivered until it can be audited",
+        "GIVEN a Bank Compliance Officer reviews the audit trail WHEN records are queried by user or date THEN the matching records are returned"
+      ],
+      "additional_scenarios": [
+        "GIVEN an access denial for an unentitled account WHEN it occurs THEN it is also recorded in the audit trail",
+        "GIVEN an audit record contains personal data WHEN it is stored THEN it is protected in line with the bank's data privacy policy",
+        "GIVEN the same user accesses on Web and Mobile WHEN records are written THEN each record states the channel"
+      ],
+      "ears_requirements": [
+        "When a user accesses virtual account information, the system shall record the user identity, timestamp, view and accounts accessed.",
+        "When a user downloads a virtual account document, the system shall record the user identity, timestamp, document type and accounts.",
+        "The system shall retain audit records unaltered for the regulatory minimum period.",
+        "If the audit store is unavailable, then the system shall not deliver a download until it can be audited.",
+        "The system shall record the channel of each audited access."
+      ],
+      "brd_reference": "Section 7 (Regulatory and Compliance, Legal Requirements)",
+      "ba_comments": "[Pending BA Review]",
+      "depends_on": []
+    }
+  ],
+  "assumptions_register": [
+    {
+      "number": 1,
+      "story_id": "US-001",
+      "assumption_text": "The CIF shown in the single-CIF scenario is the corporate entity (CIF) of the user; the BRD glossary defines 'Entity' as an individual staff member, which conflicts with its use for CIF selection in BF-AS-VA-01. Stories use Entity = corporate legal entity / CIF.",
+      "feature_context": "FEAT-001 Aggregated summary of accounts"
+    },
+    {
+      "number": 2,
+      "story_id": "US-005",
+      "assumption_text": "VA counts per Parent VA, per Current Account and in total are computed over the entitled population only, not the corporate's full hierarchy.",
+      "feature_context": "FEAT-001 Aggregated summary of accounts"
+    },
+    {
+      "number": 3,
+      "story_id": "US-006",
+      "assumption_text": "The 'consolidated inflow of cash position view' period is not defined in the BRD; it is assumed to aggregate today's inflow across the entitled virtual accounts. It is a collection measure, not the physical account balance.",
+      "feature_context": "FEAT-001 Aggregated summary of accounts"
+    },
+    {
+      "number": 4,
+      "story_id": "US-007",
+      "assumption_text": "Nickname is marked Mandatory for display in Section 5.2.1 although nickname creation is optional; when no nickname has been defined the field is shown empty. Users are not forced to create nicknames.",
+      "feature_context": "FEAT-002 Virtual account list"
+    },
+    {
+      "number": 5,
+      "story_id": "US-007",
+      "assumption_text": "[GAP] Currency is described as the settlement-account currency in Section 5.2.1 and as the virtual account currency in Sections 5.2.2 and 5.2.3; assumed the VA inherits the currency of its linked current account pending VCB confirmation.",
+      "feature_context": "FEAT-002 Virtual account list"
+    },
+    {
+      "number": 6,
+      "story_id": "US-009",
+      "assumption_text": "The 12-month visibility window for Closed virtual accounts is measured from the account closure date.",
+      "feature_context": "FEAT-002 Virtual account list"
+    },
+    {
+      "number": 7,
+      "story_id": "US-016",
+      "assumption_text": "Sorting applies to the whole entitled result set across pages, not only the visible page, consistent with the BRD's all-pages search requirement.",
+      "feature_context": "FEAT-003 Account list search, filter and display controls"
+    },
+    {
+      "number": 8,
+      "story_id": "US-021",
+      "assumption_text": "Today's inflow and month-to-date credits use the bank's business date and Vietnam time; they are collection measures and do not represent funds held by the virtual account, which holds no independent balance (Glossary).",
+      "feature_context": "FEAT-004 Virtual account details"
+    },
+    {
+      "number": 9,
+      "story_id": "US-023",
+      "assumption_text": "Entitlement to a virtual account does not imply entitlement to its linked Current Account; the redirect requires the separate current account entitlement.",
+      "feature_context": "FEAT-004 Virtual account details"
+    },
+    {
+      "number": 10,
+      "story_id": "US-026",
+      "assumption_text": "[GAP] The historical look-up limit is stated as 3-5 years; it is treated as a configurable parameter until VCB fixes the figure.",
+      "feature_context": "FEAT-005 Transaction history"
+    },
+    {
+      "number": 11,
+      "story_id": "US-028",
+      "assumption_text": "[GAP] The closing balance is assumed to be the net of period credits and debits from the zero opening balance; it is a reporting figure and must not be presented as the physical deposit balance. Treatment of reversals and parent roll-ups is not specified.",
+      "feature_context": "FEAT-005 Transaction history"
+    },
+    {
+      "number": 12,
+      "story_id": "US-029",
+      "assumption_text": "History at Root VA / Parent level aggregates only entitled descendant VAs and lists each transaction once, with no double counting across hierarchy levels.",
+      "feature_context": "FEAT-005 Transaction history"
+    },
+    {
+      "number": 13,
+      "story_id": "US-033",
+      "assumption_text": "The Section 8 glossary definitions of Account Information Confirmation, Transaction Reference Number and Statement appear shifted by one row; stories follow the Section 3.2.1 (a) document table for the meaning of each document.",
+      "feature_context": "FEAT-006 Statement generation"
+    },
+    {
+      "number": 14,
+      "story_id": "US-035",
+      "assumption_text": "The mechanism for statements above 10,000 records (asynchronous generation, file splitting or other) is a solution-design decision; stories specify only the business outcome.",
+      "feature_context": "FEAT-006 Statement generation"
+    },
+    {
+      "number": 15,
+      "story_id": "US-037",
+      "assumption_text": "[GAP] 'Same day request only' is interpreted as the confirmation certifying account information as of the request date, with the request placed on that business day; VCB to confirm.",
+      "feature_context": "FEAT-007 Account information confirmation"
+    },
+    {
+      "number": 16,
+      "story_id": "US-040",
+      "assumption_text": "The favorite limit (10) and nickname length (30) are described as 'recommended' in BF-AS-VA-07 but as limits in Section 3.2.1; stories enforce them as hard limits pending BA confirmation.",
+      "feature_context": "FEAT-008 Favorites and nicknames"
+    },
+    {
+      "number": 17,
+      "story_id": "US-043",
+      "assumption_text": "[GAP] The QR payload standard is not specified in the BRD; the QR code is assumed to follow the bank's approved payment QR scheme.",
+      "feature_context": "FEAT-009 QR code generation"
+    },
+    {
+      "number": 18,
+      "story_id": "US-045",
+      "assumption_text": "In-app sharing uses the device's native share options on Mobile; on Web the QR code is offered as a download.",
+      "feature_context": "FEAT-009 QR code generation"
+    },
+    {
+      "number": 19,
+      "story_id": "US-046",
+      "assumption_text": "[GAP] The triggering event is assumed to be the credit being attributed to the virtual account; recipients are entitled corporate users; handling of reversals and duplicate events is not specified in the BRD.",
+      "feature_context": "FEAT-010 Real-time credit notifications"
+    },
+    {
+      "number": 20,
+      "story_id": "US-047",
+      "assumption_text": "Virtual account types (Customer VA, Add on - Self VA, Add on - On Behalf of VA) are displayed only; the BRD defines no type-specific behaviour or permissions.",
+      "feature_context": "FEAT-011 Entitlement-scoped access and audit trail"
+    },
+    {
+      "number": 21,
+      "story_id": "US-048",
+      "assumption_text": "The Bank Compliance Officer role is not named in the BRD; it represents the bank audit and compliance function that consumes the Section 7 audit trail. The retention period is the regulatory minimum and is not quantified in the BRD.",
+      "feature_context": "FEAT-011 Entitlement-scoped access and audit trail"
+    },
+    {
+      "number": 22,
+      "story_id": "US-001",
+      "assumption_text": "The product code is C.1.5 per the title block and the SOW mapping; Sections 2.1 and 2.2 of the BRD still reference C.1.4.",
+      "feature_context": "FEAT-001 Aggregated summary of accounts"
+    }
+  ],
+  "sign_off": [
+    {
+      "role": "Business Analyst",
+      "name": "-",
+      "status": "PENDING",
+      "date": "-"
+    },
+    {
+      "role": "Product Owner",
+      "name": "-",
+      "status": "PENDING",
+      "date": "-"
+    }
+  ]
+}

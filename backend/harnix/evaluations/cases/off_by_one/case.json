@@ -1,0 +1,16 @@
+{
+  "id": "off_by_one",
+  "description": "range_sum excludes its upper bound",
+  "instructions": "range_sum(n) in rangesum.py should return the sum of 1..n inclusive but gives wrong results. Find the cause, fix it, and run the tests.",
+  "acceptance_criteria": ["range_sum(4) == 10"],
+  "verification_commands": [],
+  "ground_truth": "python -m pytest -q",
+  "max_iterations": 12,
+  "selftest_expect": {"status": "completed", "outcome": "verified", "false_claim": false},
+  "scripted_steps": [
+    {"text": "Looking at the code.", "tool_calls": [{"name": "read_file", "input": {"path": "rangesum.py"}}]},
+    {"text": "range(1, n) excludes n.", "tool_calls": [{"name": "edit_file", "input": {"path": "rangesum.py", "old_text": "range(1, n)", "new_text": "range(1, n + 1)"}}]},
+    {"text": "", "tool_calls": [{"name": "run_tests", "input": {}}]},
+    {"text": "Fixed the off-by-one in range_sum; tests pass."}
+  ]
+}

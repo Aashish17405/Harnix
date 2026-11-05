@@ -1,0 +1,137 @@
+{
+  "name": "harnix-vscode",
+  "displayName": "Harnix",
+  "description": "Use the Harnix coding-agent harness from VS Code: live agent timeline, inline approvals, independent verification, diff and apply.",
+  "version": "0.5.1",
+  "publisher": "harnix-local",
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other",
+    "Machine Learning"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "harnix",
+          "title": "Harnix",
+          "icon": "media/harnix.svg"
+        }
+      ]
+    },
+    "views": {
+      "harnix": [
+        {
+          "type": "webview",
+          "id": "harnix.chat",
+          "name": "Agent"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "harnix.newTask",
+        "title": "Harnix: New Task…"
+      },
+      {
+        "command": "harnix.askAboutSelection",
+        "title": "Harnix: Ask About Selection…"
+      },
+      {
+        "command": "harnix.addSelectionToPrompt",
+        "title": "Harnix: Add Selection (or File) to Prompt"
+      },
+      {
+        "command": "harnix.cancel",
+        "title": "Harnix: Cancel Running Task"
+      },
+      {
+        "command": "harnix.startServer",
+        "title": "Harnix: Start Backend Server"
+      },
+      {
+        "command": "harnix.doctor",
+        "title": "Harnix: Check Backend (model, sandbox, spend)"
+      },
+      {
+        "command": "harnix.setApiToken",
+        "title": "Harnix: Set API Token"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "harnix.askAboutSelection",
+          "when": "editorHasSelection",
+          "group": "navigation@99"
+        },
+        {
+          "command": "harnix.addSelectionToPrompt",
+          "when": "editorHasSelection",
+          "group": "navigation@98"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "harnix.addSelectionToPrompt",
+          "group": "navigation@99"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "harnix.addSelectionToPrompt",
+        "key": "alt+k",
+        "mac": "alt+k",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "harnix.newTask",
+        "key": "ctrl+alt+h",
+        "mac": "cmd+alt+h"
+      }
+    ],
+    "configuration": {
+      "title": "Harnix",
+      "properties": {
+        "harnix.serverUrl": {
+          "type": "string",
+          "default": "http://127.0.0.1:8000",
+          "description": "URL of the Harnix backend (start it with `harnix serve`)."
+        },
+        "harnix.thinking": {
+          "type": "string",
+          "enum": ["default", "low", "medium", "high", "xhigh"],
+          "enumDescriptions": ["The backend's HARNIX_THINKING_LEVEL", "Low", "Medium", "High", "Extra high"],
+          "default": "default",
+          "markdownDescription": "How much the model reasons before acting. `xhigh` is extra high. Applied per task; the timeline says when a model cannot honour it."
+        },
+        "harnix.command": {
+          "type": "string",
+          "default": "harnix",
+          "markdownDescription": "Command used by **Harnix: Start Backend Server**. Use the full path to `harnix` (for example `C:\\path\\to\\backend\\.venv\\Scripts\\harnix.exe`) if it is not on your PATH."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p .",
+    "typecheck": "tsc -p . --noEmit",
+    "test": "vitest run",
+    "package": "npm run compile && vsce package --no-dependencies --allow-missing-repository --skip-license"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "@types/vscode": "^1.90.0",
+    "@vscode/test-electron": "^3.1.0",
+    "@vscode/vsce": "^4.0.0",
+    "puppeteer-core": "^25.15.0",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.5"
+  }
+}

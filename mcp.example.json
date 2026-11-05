@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "C:/path/you/allow"],
+      "autoApprove": ["read_text_file", "list_directory"]
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": { "Authorization": "Bearer ${GITHUB_TOKEN}" }
+    },
+    "local-tool": { "command": "python", "args": ["-m", "my_server"], "env": { "API_KEY": "${MY_API_KEY}" }, "disabled": true }
+  }
+}
