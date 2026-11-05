@@ -75,6 +75,22 @@ if echo "$staged" | grep -q '^frontend/'; then
   fi
 fi
 
+# 3. Website Checks (Showcase Site)
+if echo "$staged" | grep -q '^website/'; then
+  echo "[pre-commit] Checking website changes..."
+  cd "$root/website" || exit 1
+
+  if [ -d "node_modules" ]; then
+    echo "[pre-commit] Running website lint..."
+    npm run lint --silent < /dev/null || fail "website lint"
+
+    echo "[pre-commit] Running website typecheck..."
+    npm run typecheck --silent < /dev/null || fail "website typecheck"
+  else
+    echo "[pre-commit] Note: website/node_modules not found, skipping website checks."
+  fi
+fi
+
 echo "[pre-commit] All pre-commit checks passed successfully."
 exit 0
 

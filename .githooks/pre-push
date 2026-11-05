@@ -44,5 +44,20 @@ if [ -d "$root/frontend/node_modules" ]; then
   fi
 fi
 
+# 3. Website checks
+if [ -d "$root/website/node_modules" ]; then
+  cd "$root/website" || exit 1
+  echo "[pre-push] Running website typecheck..."
+  npm run typecheck --silent < /dev/null || {
+    echo "[pre-push] ERROR: Website typecheck failed! Push aborted." >&2
+    exit 1
+  }
+  echo "[pre-push] Running website production build..."
+  npm run build < /dev/null || {
+    echo "[pre-push] ERROR: Website production build failed! Push aborted." >&2
+    exit 1
+  }
+fi
+
 echo "[pre-push] All pre-push checks passed. Proceeding with push."
 exit 0
