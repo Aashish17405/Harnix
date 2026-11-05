@@ -1,99 +1,102 @@
 import React from "react";
-import { CheckIcon, AlertTriangleIcon, ShieldCheckIcon } from "./Icons";
 
 export function ComparisonMatrix() {
-  const comparisons = [
+  const threats = [
     {
-      feature: "Task Completion Model",
-      naive: "Trusts LLM when it says 'I am finished' or stops calling tools.",
-      harnix: "Model claim is untrusted. Completion requires deterministic machine verification to pass.",
-      highlight: true,
+      hazard: "Hallucinated Task Completion",
+      unconstrained: "Assumes completion as soon as LLM stops tool calling or emits 'Fixed!'. Uncaught regressions ship to git.",
+      harnix: "Model assertions are ignored. Task completion strictly requires deterministic exit code 0 from test suite.",
+      severity: "CRITICAL",
     },
     {
-      feature: "Terminal Execution Security",
-      naive: "Raw shell access (/bin/sh, bash) with unrestricted piping and subshells.",
-      harnix: "Strict tokenized argv allowlist (policies/commands.py). Arbitrary shells are denied.",
-      highlight: true,
+      hazard: "Shell Injection via Prompt Hijack",
+      unconstrained: "Executes unconstrained /bin/sh or cmd.exe. Injected prompts can invoke curl, bash pipes, or background daemons.",
+      harnix: "POSIX argv tokenization. Arbitrary shell operators (|, &, ;, >, `) are rejected prior to execution.",
+      severity: "HIGH",
     },
     {
-      feature: "Workspace Isolation",
-      naive: "Edits host repository in-place; uncommitted work can be corrupted or deleted.",
-      harnix: "Ephemeral copy + baseline git hash inside Docker sandbox (--network none). Atomic apply-back.",
-      highlight: false,
+      hazard: "Host Working Tree Corruption",
+      unconstrained: "Edits host repository directly. In-progress unstaged changes can be overwritten, mutated, or deleted.",
+      harnix: "Disposable clone inside ephemeral Docker container. Real repository files remain untouched until explicit apply-back.",
+      severity: "HIGH",
     },
     {
-      feature: "Upstream Spec Context",
-      naive: "Limited to raw grep / prompt stuffing with no concept of product requirements.",
-      harnix: "Neo4j Knowledge Graph + pgvector hybrid search connecting BRDs & User Stories to AST symbols via MCP.",
-      highlight: true,
+      hazard: "Secret & Credential Exfiltration",
+      unconstrained: "Process inherits host environment variables (AWS keys, GitHub tokens, database passwords).",
+      harnix: "Environment scrubbed. Docker sandbox runs with --network none. Zero outbound sockets permitted.",
+      severity: "CRITICAL",
     },
     {
-      feature: "Human-in-the-Loop Approval",
-      naive: "Either all-or-nothing autonomy or constant annoying alerts for trivial reads.",
-      harnix: "Granular policy engine: read operations are free; risky writes and commands require exact SHA256 approval.",
-      highlight: false,
+      hazard: "Runaway Token / Cost Loops",
+      unconstrained: "Unbounded retries against hallucinations rapidly exhaust token allocations and budget quotas.",
+      harnix: "Per-session step caps, token cost accounting, and immediate circuit-breaking on repeated policy violations.",
+      severity: "MEDIUM",
     },
     {
-      feature: "Auditability & Event Sourcing",
-      naive: "Transient terminal stdout or in-memory chat logs that disappear on reload.",
-      harnix: "Every decision, tool result, and policy verdict is an immutable, secret-redacted database row.",
-      highlight: false,
+      hazard: "Business Spec Hallucination",
+      unconstrained: "Agent guesses product logic from sparse prompts or raw grep snippets.",
+      harnix: "Neo4j Knowledge Graph traces code symbols upstream to exact Jira user stories and acceptance criteria.",
+      severity: "MEDIUM",
     },
   ];
 
   return (
-    <section id="comparison" className="py-24 relative bg-grid-pattern">
+    <section id="policy" className="py-20 bg-[#0E1017] border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-mono text-blue-400 mb-4">
-            <ShieldCheckIcon className="w-3.5 h-3.5" />
-            <span>Architectural Contrast</span>
+        
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12 pb-6 border-b border-white/10">
+          <div>
+            <div className="flex items-center gap-2 font-mono text-xs text-neutral-400 uppercase tracking-wider mb-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+              <span>02 // Threat Model &amp; Policy Bounds</span>
+            </div>
+            <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-white">
+              Failure modes and containment mitigations.
+            </h2>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4">
-            Why naive AI agents fail in production.
-          </h2>
-          <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-            The difference between an AI demo and an engineering platform is what happens when the model hallucinates.
+          <p className="text-neutral-400 font-mono text-xs max-w-md">
+            Comparing how unconstrained AI developer tools behave versus Harnix&apos;s hardened execution boundary.
           </p>
         </div>
 
-        {/* Comparison Table */}
-        <div className="glass-panel rounded-3xl overflow-hidden border border-white/10 shadow-2xl max-w-5xl mx-auto">
+        {/* Matrix Table */}
+        <div className="sys-panel overflow-hidden border border-neutral-700/80">
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-xs sm:text-sm">
+            <table className="w-full text-left border-collapse font-mono text-xs">
               <thead>
-                <tr className="border-b border-white/10 bg-[#0E121B]">
-                  <th className="py-4 px-6 font-mono text-xs uppercase tracking-wider text-slate-400 font-bold w-1/4">
-                    Capability
+                <tr className="border-b border-white/10 bg-neutral-900 text-neutral-400 text-[11px]">
+                  <th className="py-3 px-5 font-bold uppercase w-1/4">
+                    Failure Mode / Threat
                   </th>
-                  <th className="py-4 px-6 font-mono text-xs uppercase tracking-wider text-slate-400 font-bold w-3/8">
-                    Naive Agent Wrappers
+                  <th className="py-3 px-5 font-bold uppercase w-3/8 text-amber-400/90">
+                    Unconstrained AI Agent
                   </th>
-                  <th className="py-4 px-6 font-mono text-xs uppercase tracking-wider text-blue-400 font-bold w-3/8 bg-blue-950/20">
-                    Harnix Platform
+                  <th className="py-3 px-5 font-bold uppercase w-3/8 text-emerald-400 bg-emerald-950/20">
+                    Harnix Hardened Harness
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5 font-normal">
-                {comparisons.map((row, idx) => (
-                  <tr
-                    key={idx}
-                    className={`transition-colors hover:bg-white/[0.02] ${
-                      row.highlight ? "bg-white/[0.01]" : ""
-                    }`}
-                  >
-                    <td className="py-5 px-6 font-mono font-semibold text-white">
-                      {row.feature}
+              <tbody className="divide-y divide-white/5 font-sans">
+                {threats.map((row, idx) => (
+                  <tr key={idx} className="hover:bg-white/[0.02] transition-colors">
+                    <td className="py-4 px-5 font-mono text-xs text-white align-top">
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold">{row.hazard}</span>
+                      </div>
+                      <span className="inline-block mt-1 text-[10px] font-mono text-neutral-400 px-1.5 py-0.5 rounded bg-neutral-800">
+                        RISK: {row.severity}
+                      </span>
                     </td>
-                    <td className="py-5 px-6 text-slate-400 leading-relaxed">
+                    <td className="py-4 px-5 text-neutral-300 text-xs leading-relaxed align-top">
                       <div className="flex items-start gap-2">
-                        <AlertTriangleIcon className="w-4 h-4 text-amber-400/80 flex-shrink-0 mt-0.5" />
-                        <span>{row.naive}</span>
+                        <span className="text-amber-400 font-mono font-bold select-none">&times;</span>
+                        <span>{row.unconstrained}</span>
                       </div>
                     </td>
-                    <td className="py-5 px-6 text-slate-200 leading-relaxed bg-blue-950/10 border-l border-r border-blue-500/10">
+                    <td className="py-4 px-5 text-neutral-200 text-xs leading-relaxed align-top bg-emerald-950/10 border-l border-white/5">
                       <div className="flex items-start gap-2">
-                        <CheckIcon className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                        <span className="text-emerald-400 font-mono font-bold select-none">&radic;</span>
                         <span className="font-medium text-white">{row.harnix}</span>
                       </div>
                     </td>
@@ -103,8 +106,8 @@ export function ComparisonMatrix() {
             </table>
           </div>
         </div>
+
       </div>
     </section>
   );
 }
-

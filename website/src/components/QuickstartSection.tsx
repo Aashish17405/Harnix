@@ -1,95 +1,96 @@
 "use client";
 
 import React, { useState } from "react";
-import { TerminalIcon, CheckIcon, CopyIcon } from "./Icons";
+import { CheckIcon, CopyIcon } from "./Icons";
 
 export function QuickstartSection() {
   const [os, setOs] = useState<"win" | "bash">("win");
-  const [provider, setProvider] = useState<"mock" | "openai" | "anthropic">("mock");
+  const [mode, setMode] = useState<"mock" | "live">("mock");
   const [copied, setCopied] = useState(false);
 
   const getCodeSnippet = () => {
-    if (provider === "mock") {
+    if (mode === "mock") {
       if (os === "win") {
-        return `# 1. Backend Setup & Mock Script Run
-cd backend
+        return `# 1. Clone repository & initialize backend venv
+git clone https://github.com/your-org/harnix.git
+cd harnix\\backend
 python -m venv .venv
 .\\.venv\\Scripts\\Activate.ps1
 pip install -e ".[dev]"
+
+# 2. Initialize SQLite schema & run migrations
 alembic upgrade head
 
-# Run with scripted mock provider (no API key needed)
+# 3. Configure local mock environment (Zero API Keys Required)
 $env:HARNIX_PROVIDER="scripted"
 $env:HARNIX_SCRIPTED_FILE="examples/mock-script.json"
 $env:HARNIX_EXECUTION_MODE="local"
 $env:HARNIX_ALLOWED_REPO_ROOTS=(Resolve-Path examples/repos).Path
 
+# 4. Start the Harnix API Daemon
 python -m uvicorn harnix.api.app:app_factory --factory --host 127.0.0.1 --port 8000
 
-# 2. Frontend (in a second terminal)
-cd frontend
+# 5. In a second terminal: Start the Web Dashboard
+cd ..\\frontend
 npm install
 npm run dev     # Open http://127.0.0.1:5173`;
       } else {
-        return `# 1. Backend Setup & Mock Script Run
-cd backend
-python -m venv .venv && source .venv/bin/activate
+        return `# 1. Clone repository & initialize backend venv
+git clone https://github.com/your-org/harnix.git
+cd harnix/backend
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -e ".[dev]"
+
+# 2. Initialize SQLite schema & run migrations
 alembic upgrade head
 
-# Run with scripted mock provider (no API key needed)
+# 3. Configure local mock environment (Zero API Keys Required)
 export HARNIX_PROVIDER=scripted
 export HARNIX_SCRIPTED_FILE=examples/mock-script.json
 export HARNIX_EXECUTION_MODE=local
 export HARNIX_ALLOWED_REPO_ROOTS="$PWD/examples/repos"
 
-uvicorn harnix.api.app:app_factory --factory --host 127.0.0.1 --port 8000
+# 4. Start the Harnix API Daemon
+python3 -m uvicorn harnix.api.app:app_factory --factory --host 127.0.0.1 --port 8000
 
-# 2. Frontend (in a second terminal)
-cd frontend
+# 5. In a second terminal: Start the Web Dashboard
+cd ../frontend
 npm install
 npm run dev     # Open http://127.0.0.1:5173`;
       }
     }
 
-    if (provider === "openai") {
-      if (os === "win") {
-        return `# Configure OpenAI in .env
-cp .env.example .env
-# Edit .env with your OPENAI_API_KEY and HARNIX_MODEL=gpt-5.4-nano
-
+    // Live LLM Provider Mode
+    if (os === "win") {
+      return `# 1. Backend environment setup
 cd backend
-.\\.venv\\Scripts\\alembic upgrade head
-python -m uvicorn harnix.api.app:app_factory --factory --host 127.0.0.1 --port 8000
-
-# Second terminal: Web Dashboard
-cd frontend
-npm run dev`;
-      } else {
-        return `# Configure OpenAI in .env
+.\\.venv\\Scripts\\Activate.ps1
 cp .env.example .env
-# Edit .env with your OPENAI_API_KEY and HARNIX_MODEL=gpt-5.4-nano
 
+# 2. Configure provider & budget cap in .env:
+# HARNIX_PROVIDER=openai
+# HARNIX_MODEL=gpt-6-luna
+# OPENAI_API_KEY=sk-...
+# HARNIX_EXECUTION_MODE=docker
+
+# 3. Run a verified task directly from the CLI
+harnix "fix failing test in rangesum.py" --verify "pytest tests/test_rangesum.py"`;
+    } else {
+      return `# 1. Backend environment setup
 cd backend
-alembic upgrade head
-uvicorn harnix.api.app:app_factory --factory --host 127.0.0.1 --port 8000
+source .venv/bin/activate
+cp .env.example .env
 
-# Second terminal: Web Dashboard
-cd frontend
-npm run dev`;
-      }
+# 2. Configure provider & budget cap in .env:
+# export HARNIX_PROVIDER=openai
+# export HARNIX_MODEL=gpt-6-luna
+# export OPENAI_API_KEY=sk-...
+# export HARNIX_EXECUTION_MODE=docker
+
+# 3. Run a verified task directly from the CLI
+harnix "fix failing test in rangesum.py" --verify "pytest tests/test_rangesum.py"`;
     }
-
-    // Anthropic
-    return `# Configure Anthropic in .env
-cp .env.example .env
-# Set HARNIX_PROVIDER=anthropic, HARNIX_MODEL=claude-sonnet-5-5, ANTHROPIC_API_KEY=sk-ant-...
-
-cd backend
-uvicorn harnix.api.app:app_factory --factory --host 127.0.0.1 --port 8000
-
-# Second terminal: Web Dashboard
-cd frontend && npm run dev`;
   };
 
   const handleCopy = () => {
@@ -99,115 +100,117 @@ cd frontend && npm run dev`;
   };
 
   return (
-    <section id="quickstart" className="py-24 relative bg-grid-pattern">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs font-mono text-blue-400 mb-4">
-            <TerminalIcon className="w-3.5 h-3.5" />
-            <span>Developer Quickstart</span>
+    <section id="quickstart" className="py-20 bg-[#0B0D12] border-b border-white/10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10 pb-6 border-b border-white/10">
+          <div>
+            <div className="flex items-center gap-2 font-mono text-xs text-neutral-400 uppercase tracking-wider mb-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+              <span>05 // Quickstart</span>
+            </div>
+            <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-white">
+              Get running in under 60 seconds.
+            </h2>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4">
-            Zero to verified demo in 60 seconds.
-          </h2>
-          <p className="text-slate-400 text-sm sm:text-base leading-relaxed">
-            Test the entire autonomous loop, human approvals, and verification engine right now without setting up API keys.
+          <p className="text-neutral-400 font-mono text-xs max-w-md">
+            Test the entire deterministic verification engine locally using mock mode without an API key or spend.
           </p>
         </div>
 
-        {/* Option Selectors */}
-        <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-white/10 shadow-2xl">
-          <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-6 border-b border-white/10">
+        {/* Console Box */}
+        <div className="sys-panel overflow-hidden border border-neutral-700/80 max-w-4xl mx-auto">
+          
+          {/* Controls Bar */}
+          <div className="p-4 bg-neutral-900 border-b border-white/10 flex flex-wrap items-center justify-between gap-4">
+            
             {/* Mode Selector */}
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-mono text-slate-400 mr-2">Mode:</span>
+            <div className="flex items-center gap-2 font-mono text-xs">
               <button
-                onClick={() => setProvider("mock")}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${
-                  provider === "mock"
-                    ? "bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30"
-                    : "bg-white/5 text-slate-400 hover:text-white"
+                onClick={() => setMode("mock")}
+                className={`px-3 py-1.5 rounded transition-colors ${
+                  mode === "mock"
+                    ? "bg-emerald-500 text-black font-bold"
+                    : "bg-neutral-800 text-neutral-300 hover:text-white"
                 }`}
               >
-                60s Mock Demo (Free)
+                Mock Demo (0 Keys)
               </button>
               <button
-                onClick={() => setProvider("openai")}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${
-                  provider === "openai"
-                    ? "bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30"
-                    : "bg-white/5 text-slate-400 hover:text-white"
+                onClick={() => setMode("live")}
+                className={`px-3 py-1.5 rounded transition-colors ${
+                  mode === "live"
+                    ? "bg-emerald-500 text-black font-bold"
+                    : "bg-neutral-800 text-neutral-300 hover:text-white"
                 }`}
               >
-                Live OpenAI
-              </button>
-              <button
-                onClick={() => setProvider("anthropic")}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${
-                  provider === "anthropic"
-                    ? "bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30"
-                    : "bg-white/5 text-slate-400 hover:text-white"
-                }`}
-              >
-                Live Anthropic
+                Live LLM (OpenAI / Anthropic)
               </button>
             </div>
 
-            {/* OS Selector */}
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-mono text-slate-400 mr-2">Shell:</span>
-              <button
-                onClick={() => setOs("win")}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${
-                  os === "win"
-                    ? "bg-white/15 text-white font-bold"
-                    : "bg-white/5 text-slate-400 hover:text-white"
-                }`}
-              >
-                PowerShell (Windows)
-              </button>
-              <button
-                onClick={() => setOs("bash")}
-                className={`px-3 py-1.5 rounded-lg text-xs font-mono transition-all ${
-                  os === "bash"
-                    ? "bg-white/15 text-white font-bold"
-                    : "bg-white/5 text-slate-400 hover:text-white"
-                }`}
-              >
-                Bash (Linux / macOS)
-              </button>
-            </div>
-          </div>
+            {/* OS Selector & Copy */}
+            <div className="flex items-center gap-3 font-mono text-xs">
+              <div className="flex items-center gap-1 bg-neutral-800 p-1 rounded">
+                <button
+                  onClick={() => setOs("win")}
+                  className={`px-2.5 py-1 rounded transition-colors ${
+                    os === "win"
+                      ? "bg-neutral-700 text-white font-semibold"
+                      : "text-neutral-400 hover:text-white"
+                  }`}
+                >
+                  PowerShell
+                </button>
+                <button
+                  onClick={() => setOs("bash")}
+                  className={`px-2.5 py-1 rounded transition-colors ${
+                    os === "bash"
+                      ? "bg-neutral-700 text-white font-semibold"
+                      : "text-neutral-400 hover:text-white"
+                  }`}
+                >
+                  Bash / Zsh
+                </button>
+              </div>
 
-          {/* Code Box */}
-          <div className="relative rounded-2xl bg-[#06080B] border border-white/10 p-6 overflow-hidden">
-            <div className="flex justify-between items-center mb-3">
-              <span className="text-xs font-mono text-slate-400">
-                {os === "win" ? "PowerShell" : "bash"}
-              </span>
               <button
                 onClick={handleCopy}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 text-xs font-mono transition-colors"
+                className="flex items-center gap-1 px-3 py-1.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white border border-neutral-700 transition-colors"
+                title="Copy instructions"
               >
                 {copied ? (
                   <>
                     <CheckIcon className="w-3.5 h-3.5 text-emerald-400" />
-                    <span className="text-emerald-400">Copied</span>
+                    <span className="text-emerald-400 text-xs">Copied</span>
                   </>
                 ) : (
                   <>
                     <CopyIcon className="w-3.5 h-3.5" />
-                    <span>Copy Snippet</span>
+                    <span className="text-xs">Copy</span>
                   </>
                 )}
               </button>
             </div>
-            <pre className="text-slate-200 font-mono text-xs overflow-x-auto whitespace-pre leading-relaxed">
+
+          </div>
+
+          {/* Terminal Code Display */}
+          <div className="p-6 bg-[#090A0E] font-mono text-xs text-neutral-200 overflow-x-auto leading-relaxed max-h-[460px] overflow-y-auto">
+            <pre className="whitespace-pre-wrap font-mono">
               {getCodeSnippet()}
             </pre>
           </div>
+
+          {/* Bottom Bar */}
+          <div className="p-3 bg-neutral-900 border-t border-white/10 flex items-center justify-between font-mono text-[11px] text-neutral-400">
+            <span>REQUIRES: PYTHON 3.11+ &bull; NODE.JS 18+</span>
+            <span className="text-neutral-300">DOCKER ENGINE OPTIONAL FOR LOCAL MOCK</span>
+          </div>
+
         </div>
+
       </div>
     </section>
   );
 }
-
