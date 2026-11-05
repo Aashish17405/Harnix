@@ -10,21 +10,25 @@ echo "[pre-push] Running pre-push verification tests..."
 if [ -d "$root/backend" ]; then
   cd "$root/backend" || exit 1
 
-  # Add local venv to PATH if present
+  has_venv=0
   for d in .venv/Scripts .venv/bin venv/Scripts venv/bin; do
     if [ -d "$d" ]; then
       PATH="$PWD/$d:$PATH"
+      has_venv=1
+      break
     fi
   done
 
-  if command -v pytest >/dev/null 2>&1; then
-    echo "[pre-push] Running backend policy and security tests..."
-    pytest tests/test_policies.py -q || {
-      echo "[pre-push] ERROR: Backend tests failed! Push aborted." >&2
-      exit 1
-    }
+  if [ $has_venv -eq 1 ]; then
+    if command -v pytest >/dev/null 2>&1; then
+      echo "[pre-push] Running backend policy and security tests..."
+      pytest tests/test_policies.py -q || {
+        echo "[pre-push] ERROR: Backend tests failed! Push aborted." >&2
+        exit 1
+      }
+    fi
   else
-    echo "[pre-push] Note: pytest not found in PATH or .venv. Skipping test suite."
+    echo "[pre-push] Notice: backend/.venv not found. Install via 'pip install -e .[dev]' to enable full test validation on push."
   fi
 fi
 
