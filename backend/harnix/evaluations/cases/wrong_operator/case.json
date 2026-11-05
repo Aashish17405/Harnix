@@ -1,0 +1,16 @@
+{
+  "id": "wrong_operator",
+  "description": "add() subtracts instead of adding",
+  "instructions": "The test suite is failing. Find out why, fix the underlying bug (do not edit the tests), and report the results.",
+  "acceptance_criteria": [],
+  "verification_commands": [],
+  "ground_truth": "python -m pytest -q",
+  "max_iterations": 12,
+  "selftest_expect": {"status": "completed", "outcome": "verified", "false_claim": false},
+  "scripted_steps": [
+    {"text": "", "tool_calls": [{"name": "run_tests", "input": {}}]},
+    {"text": "add uses the wrong operator.", "tool_calls": [{"name": "edit_file", "input": {"path": "mathutil.py", "old_text": "return a - b", "new_text": "return a + b"}}]},
+    {"text": "", "tool_calls": [{"name": "run_tests", "input": {}}]},
+    {"text": "add() used '-' instead of '+'. Fixed; tests pass."}
+  ]
+}

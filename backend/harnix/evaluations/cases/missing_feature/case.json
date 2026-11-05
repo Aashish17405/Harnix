@@ -1,0 +1,16 @@
+{
+  "id": "missing_feature",
+  "description": "implement slugify so the existing tests pass",
+  "instructions": "slug.slugify is not implemented. Implement it so that it lowercases text and joins runs of alphanumeric characters with single hyphens (no leading/trailing hyphen). Make the existing tests pass without editing them.",
+  "acceptance_criteria": ["slugify('Hello, World!') == 'hello-world'"],
+  "verification_commands": [],
+  "ground_truth": "python -m pytest -q",
+  "max_iterations": 12,
+  "selftest_expect": {"status": "completed", "outcome": "verified", "false_claim": false},
+  "scripted_steps": [
+    {"text": "", "tool_calls": [{"name": "read_file", "input": {"path": "test_slug.py"}}]},
+    {"text": "", "tool_calls": [{"name": "write_file", "input": {"path": "slug.py", "content": "import re\n\n\ndef slugify(text):\n    return '-'.join(re.findall(r'[a-z0-9]+', text.lower()))\n"}}]},
+    {"text": "", "tool_calls": [{"name": "run_tests", "input": {}}]},
+    {"text": "Implemented slugify with a regex; all tests pass."}
+  ]
+}

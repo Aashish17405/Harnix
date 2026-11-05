@@ -1,0 +1,545 @@
+{
+  "schema_version": "1.0",
+  "document_info": {
+    "product": "Virtual Account - Account Management (C.1.5)",
+    "platform": "VCB Corporate Digital Banking Platform",
+    "source_brd": "BRD Account Services - Virtual Account (1).md",
+    "channels": "Web, Mobile",
+    "targeted_users": "Corporate users (Maker, Checker, Approver, Viewer) of existing Corporate DigiBank clients",
+    "generated_date": "2026-10-28",
+    "generated_by": "Claude (okf-kiro) following the Kiro backlog template - not produced by the Kiro harness"
+  },
+  "epics": [
+    {
+      "epic_number": 1,
+      "id": "E-001",
+      "name": "Virtual Account Inquiry",
+      "description": "Entitlement-scoped inquiry over the corporate's virtual accounts following the BRD interface hierarchy Aggregated Summary >> Account List >> Account Details >> Transaction History, for single-CIF and multi-CIF corporates on Web and Mobile.",
+      "brd_traceability": "C.1.5 (Sections 3.2.1, 5.1, 5.2) - BF-AS-VA-01, BF-AS-VA-02, BF-AS-VA-03, BF-AS-VA-04",
+      "features": [
+        {
+          "feature_number": "1.1",
+          "id": "FEAT-001",
+          "name": "Aggregated summary of accounts",
+          "description": "A real-time aggregated view of the entities (CIFs) and virtual accounts the Corporate User is entitled to, with entity selection, the Current Account > Root VA > Parent VA > VA hierarchy, VA counts and a consolidated inflow position.",
+          "brd_reference": "BF-AS-VA-01 (Aggregated Summary of Accounts); Sections 3.2.1, 5.1",
+          "in_scope_items": [
+            {
+              "id": "ITEM-001",
+              "text": "Corporate User with a single CIF sees the CIF they are entitled to view together with the relevant accounts under it"
+            },
+            {
+              "id": "ITEM-002",
+              "text": "Corporate User with multiple CIFs can view virtual account lists across all entities they are entitled to"
+            },
+            {
+              "id": "ITEM-003",
+              "text": "Corporate User with multiple CIFs can select specific entities from a list to scope the summary"
+            },
+            {
+              "id": "ITEM-004",
+              "text": "Corporate User can see the hierarchy view from Current Account, Root VA, Parent VA to Virtual Account as per their entitlement"
+            },
+            {
+              "id": "ITEM-005",
+              "text": "Corporate User can see the number of VAs linked to each Parent VA, to each Current Account and the total number of VAs"
+            },
+            {
+              "id": "ITEM-006",
+              "text": "Corporate User can see a consolidated inflow (cash position) view across the entitled virtual accounts"
+            }
+          ]
+        },
+        {
+          "feature_number": "1.2",
+          "id": "FEAT-002",
+          "name": "Virtual account list",
+          "description": "A consolidated list of all linked virtual accounts with the BRD-defined list fields, the mandated default ordering, visibility of Closed accounts for 12 months, pagination and export.",
+          "brd_reference": "BF-AS-VA-02 (Accounts List Information); Sections 3.2.1, 5.1, 5.2.1",
+          "in_scope_items": [
+            {
+              "id": "ITEM-007",
+              "text": "Corporate User can view all linked virtual accounts in a consolidated list showing the Section 5.2.1 list fields"
+            },
+            {
+              "id": "ITEM-008",
+              "text": "Corporate User sees the account list ordered by favorites first, then Active before other statuses, then opening date newest to oldest"
+            },
+            {
+              "id": "ITEM-009",
+              "text": "Corporate User can see virtual accounts in Closed status for up to the last 12 months"
+            },
+            {
+              "id": "ITEM-010",
+              "text": "Corporate User can download or export the entire account list or selected accounts in PDF or XLSX"
+            },
+            {
+              "id": "ITEM-011",
+              "text": "Corporate User can open the account details of a virtual account selected from the list"
+            },
+            {
+              "id": "ITEM-012",
+              "text": "Corporate User can change the rows shown per page between 10 (default), 20 and 50"
+            }
+          ]
+        },
+        {
+          "feature_number": "1.3",
+          "id": "FEAT-003",
+          "name": "Account list search, filter and display controls",
+          "description": "Search, quick filter, more filters, sorting and column customization on the virtual account list, with column preferences retained for future logins and a dropdown of accounts authorized for inquiry.",
+          "brd_reference": "BF-AS-VA-02, BF-AS-VA-07 (Personalization, Customization & Utilities); Sections 3.2.1, 5.1",
+          "in_scope_items": [
+            {
+              "id": "ITEM-013",
+              "text": "Corporate User can run a partial keyword search across all available fields and across all virtual accounts on all pages"
+            },
+            {
+              "id": "ITEM-014",
+              "text": "Corporate User can filter on any column header and use a quick filter by Root VA"
+            },
+            {
+              "id": "ITEM-015",
+              "text": "Corporate User can use More Filters by CIF, Current Account number and name, Root VA, VA number, VA name and nickname with partial matching and a notification when nothing matches"
+            },
+            {
+              "id": "ITEM-016",
+              "text": "Corporate User can sort each column in ascending or descending order"
+            },
+            {
+              "id": "ITEM-017",
+              "text": "Corporate User can reorder columns by drag and drop and choose visible columns from the column menu"
+            },
+            {
+              "id": "ITEM-018",
+              "text": "Corporate User has the customized column view saved automatically for future logins and can reset it to default"
+            },
+            {
+              "id": "ITEM-019",
+              "text": "Corporate User can pick from a dropdown of virtual accounts, Root VA, Parent VA and VA numbers authorized for inquiry"
+            }
+          ]
+        },
+        {
+          "feature_number": "1.4",
+          "id": "FEAT-004",
+          "name": "Virtual account details",
+          "description": "Point-in-time details of a selected virtual account: organisation and account information, today's inflow, month-to-date credits, the last 10 transactions, entitled redirect to the linked Current Account and the hierarchy tab.",
+          "brd_reference": "BF-AS-VA-03 (Account Details Information); Sections 3.2.2, 5.1, 5.2.2",
+          "in_scope_items": [
+            {
+              "id": "ITEM-020",
+              "text": "Corporate User can view the organisation information and account information of a selected virtual account"
+            },
+            {
+              "id": "ITEM-021",
+              "text": "Corporate User can see today's inflow and month-to-date credits for the selected virtual account"
+            },
+            {
+              "id": "ITEM-022",
+              "text": "Corporate User can see the last 10 transactions and use View more to open the transaction history"
+            },
+            {
+              "id": "ITEM-023",
+              "text": "Corporate User with the entitlement can be redirected to the linked Current Account screen of the selected virtual account"
+            },
+            {
+              "id": "ITEM-024",
+              "text": "Corporate User can view the virtual account hierarchy structure in a separate tab"
+            }
+          ]
+        },
+        {
+          "feature_number": "1.5",
+          "id": "FEAT-005",
+          "name": "Transaction history",
+          "description": "Transaction history for a virtual account or at Root VA / Parent level with preset and custom periods (max 12 months per query), the Section 5.2.3 fields and formats, zero-opening running balance and export.",
+          "brd_reference": "BF-AS-VA-04 (Virtual Account Transaction History); Sections 3.2.1, 5.1, 5.2.3",
+          "in_scope_items": [
+            {
+              "id": "ITEM-025",
+              "text": "Corporate User can view the transaction history of a selected virtual account for a preset period of 7 days (default), 14 days, last month or last 3 months"
+            },
+            {
+              "id": "ITEM-026",
+              "text": "Corporate User can select a custom date range of up to 12 months per query within the historical look-up limit"
+            },
+            {
+              "id": "ITEM-027",
+              "text": "Corporate User sees each transaction with the Section 5.2.3 fields including TellerID-Sequence and Branch-Host Date-PC Time in the defined formats"
+            },
+            {
+              "id": "ITEM-028",
+              "text": "Corporate User sees a zero opening balance, a running balance accumulated over the selected period and the closing balance"
+            },
+            {
+              "id": "ITEM-029",
+              "text": "Corporate User can view transaction history by Virtual Account or by Root VA / Parent account"
+            },
+            {
+              "id": "ITEM-030",
+              "text": "Corporate User can download or export the transaction history in PDF or XLSX"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "epic_number": 2,
+      "id": "E-002",
+      "name": "Virtual Account Reports & Documents",
+      "description": "Period statements and account information confirmations for one or many virtual accounts, in the formats of the BRD document table, with the optional PDF digital signature and support for high-volume statements.",
+      "brd_traceability": "C.1.5 (Sections 3.2.1, 3.2.2, 5.1) - BF-AS-VA-05, BF-AS-VA-06",
+      "features": [
+        {
+          "feature_number": "2.1",
+          "id": "FEAT-006",
+          "name": "Statement generation",
+          "description": "Statements for single or multiple virtual accounts over a chosen from-to period, with a zero opening balance, the statement content of the document table, PDF/XLSX/CSV formats, optional PDF digital signature and support beyond the current 10,000-record limitation.",
+          "brd_reference": "BF-AS-VA-05 (Statement Generation); Sections 3.2.1, 3.2.2, 5.1",
+          "in_scope_items": [
+            {
+              "id": "ITEM-031",
+              "text": "Corporate User can generate a statement for one or multiple virtual accounts for a selected from-to date range"
+            },
+            {
+              "id": "ITEM-032",
+              "text": "Corporate User receives a statement with a zero opening balance and the counterparty, beneficiary and transaction details listed in the document table"
+            },
+            {
+              "id": "ITEM-033",
+              "text": "Corporate User can download the statement in PDF, XLSX or CSV"
+            },
+            {
+              "id": "ITEM-034",
+              "text": "Corporate User can choose a digitally signed statement for the PDF format"
+            },
+            {
+              "id": "ITEM-035",
+              "text": "Corporate User can generate statements with record volumes above the current 10,000-record limitation"
+            }
+          ]
+        },
+        {
+          "feature_number": "2.2",
+          "id": "FEAT-007",
+          "name": "Account information confirmation",
+          "description": "Account information / existence confirmation for one or more Active virtual accounts, same-day requests only, as PDF with an optional digital signature.",
+          "brd_reference": "BF-AS-VA-06 (Account Confirmation); Sections 3.2.1, 5.1",
+          "in_scope_items": [
+            {
+              "id": "ITEM-036",
+              "text": "Corporate User can generate an account information / existence confirmation for one or more Active virtual accounts"
+            },
+            {
+              "id": "ITEM-037",
+              "text": "Corporate User can place an account confirmation request only for the same day"
+            },
+            {
+              "id": "ITEM-038",
+              "text": "Corporate User receives the account confirmation as a PDF with or without a digital signature"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "epic_number": 3,
+      "id": "E-003",
+      "name": "Personalization & Utilities",
+      "description": "User-profile level personalization of the virtual account list (favorites, nicknames) and the QR code utility for a selected virtual account.",
+      "brd_traceability": "C.1.5 (Sections 3.2.1, 3.2.2, 5.1) - BF-AS-VA-07",
+      "features": [
+        {
+          "feature_number": "3.1",
+          "id": "FEAT-008",
+          "name": "Favorites and nicknames",
+          "description": "Favorite accounts pinned to the top of the list (up to 10) and nicknames up to 30 characters, both stored at user-profile level and shown wherever the VA is displayed.",
+          "brd_reference": "BF-AS-VA-07 (Personalization, Customization & Utilities); Sections 3.2.1, 5.1",
+          "in_scope_items": [
+            {
+              "id": "ITEM-039",
+              "text": "Corporate User can mark and unmark a virtual account as favorite so that favorites are pinned to the top of the list"
+            },
+            {
+              "id": "ITEM-040",
+              "text": "Corporate User is limited to 10 favorite accounts"
+            },
+            {
+              "id": "ITEM-041",
+              "text": "Corporate User can create, update or delete a nickname of up to 30 characters for a virtual account"
+            },
+            {
+              "id": "ITEM-042",
+              "text": "Corporate User sees the nickname they defined in the account list, account details and transaction history"
+            }
+          ]
+        },
+        {
+          "feature_number": "3.2",
+          "id": "FEAT-009",
+          "name": "QR code generation",
+          "description": "A scannable payment QR code generated from the selected virtual account's information, optionally with an amount and payment description, downloadable and shareable in-app.",
+          "brd_reference": "BF-AS-VA-07 (Personalization, Customization & Utilities); Sections 3.2.2, 5.1",
+          "in_scope_items": [
+            {
+              "id": "ITEM-043",
+              "text": "Corporate User can generate a QR code with the account information of the selected virtual account"
+            },
+            {
+              "id": "ITEM-044",
+              "text": "Corporate User can enter an amount and payment description manually before generating the QR code"
+            },
+            {
+              "id": "ITEM-045",
+              "text": "Corporate User can download the QR code image or share it in-app"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "epic_number": 4,
+      "id": "E-004",
+      "name": "Notifications, Access Control & Audit",
+      "description": "Real-time credit notifications and the cross-cutting controls of Sections 5.2 and 7: hierarchy-level entitlements over every view and download, and an audit trail of access and downloads.",
+      "brd_traceability": "C.1.5 (Sections 3.1, 5.2, 6, 7)",
+      "features": [
+        {
+          "feature_number": "4.1",
+          "id": "FEAT-010",
+          "name": "Real-time credit notifications",
+          "description": "Credit transaction notifications pushed in real time to corporate users on Mobile, Email and Web.",
+          "brd_reference": "Section 6",
+          "in_scope_items": [
+            {
+              "id": "ITEM-046",
+              "text": "Corporate User receives a real-time credit notification on Mobile, Email and Web when a credit transaction is posted to a virtual account they are entitled to"
+            }
+          ]
+        },
+        {
+          "feature_number": "4.2",
+          "id": "FEAT-011",
+          "name": "Entitlement-scoped access and audit trail",
+          "description": "Inquiry access governed by the entitlements configured in the Corporate Banking System at Current Account, Root VA, Parent VA or VA level, and an audit trail of all access and downloads.",
+          "brd_reference": "Sections 3.1, 5.2, 7",
+          "in_scope_items": [
+            {
+              "id": "ITEM-047",
+              "text": "Corporate User sees, searches and downloads only virtual accounts permitted by entitlements at Current Account, Root VA, Parent VA or VA level"
+            },
+            {
+              "id": "ITEM-048",
+              "text": "Bank Compliance Officer can rely on an audit trail recording every access and download with user identity and timestamp"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "role_capabilities": [
+    {
+      "role": "Corporate Maker",
+      "capabilities": "Inquires and services virtual accounts (summary, list, details, transaction history, statements, confirmations, personalization, QR code) within the entitlements configured in the Corporate Banking System. [GAP] The BRD does not differentiate virtual account inquiry capabilities by role."
+    },
+    {
+      "role": "Corporate Checker",
+      "capabilities": "Inquires and services virtual accounts (summary, list, details, transaction history, statements, confirmations, personalization, QR code) within the entitlements configured in the Corporate Banking System. [GAP] The BRD does not differentiate virtual account inquiry capabilities by role."
+    },
+    {
+      "role": "Corporate Approver",
+      "capabilities": "Inquires and services virtual accounts (summary, list, details, transaction history, statements, confirmations, personalization, QR code) within the entitlements configured in the Corporate Banking System. [GAP] The BRD does not differentiate virtual account inquiry capabilities by role."
+    },
+    {
+      "role": "Corporate Viewer",
+      "capabilities": "Inquires and services virtual accounts (summary, list, details, transaction history, statements, confirmations, personalization, QR code) within the entitlements configured in the Corporate Banking System. [GAP] The BRD does not differentiate virtual account inquiry capabilities by role."
+    }
+  ],
+  "validation_rules": [
+    {
+      "rule_id": "V-1",
+      "rule_name": "Hierarchy-level entitlement scoping",
+      "description": "Every view, search, filter, count, aggregate and download only includes virtual accounts the user is entitled to; permissions are managed by Current Account, Root VA, Parent VA or VA number as configured in the Corporate Banking System (Sections 5.2, 7)."
+    },
+    {
+      "rule_id": "V-2",
+      "rule_name": "Inquiry preconditions",
+      "description": "The user has completed onboarding, holds the entitlement to inquire / view virtual account information and has a current account with at least one linked virtual account (Section 3.1)."
+    },
+    {
+      "rule_id": "V-3",
+      "rule_name": "Default account list order",
+      "description": "The account list is ordered by Rule 1 favorites first, Rule 2 Active accounts before other statuses, Rule 3 opening date newest to oldest (BF-AS-VA-02)."
+    },
+    {
+      "rule_id": "V-4",
+      "rule_name": "Closed account visibility window",
+      "description": "Virtual accounts in Closed status remain visible for up to the last 12 months (Section 3.2.1)."
+    },
+    {
+      "rule_id": "V-5",
+      "rule_name": "Inquiry period and look-up limits",
+      "description": "A single transaction-history or document query covers at most 12 months; look-up is limited to the past 3-5 years from the current date [GAP: exact figure not fixed in BRD] (Section 3.2.1)."
+    },
+    {
+      "rule_id": "V-6",
+      "rule_name": "Preset transaction history periods",
+      "description": "Preset periods are 7 days (default), 14 days, last month and last 3 months, alongside a customizable date range (Section 3.2.1)."
+    },
+    {
+      "rule_id": "V-7",
+      "rule_name": "Pagination options",
+      "description": "The account list offers 10 (default), 20 or 50 rows per page (Section 3.2.1)."
+    },
+    {
+      "rule_id": "V-8",
+      "rule_name": "Document format matrix",
+      "description": "Virtual Account List: PDF, XLSX. Statement: PDF, XLSX, CSV. Account information confirmation: PDF. Transaction History: PDF, XLSX (Section 3.2.1 (a))."
+    },
+    {
+      "rule_id": "V-9",
+      "rule_name": "Digital signature eligibility",
+      "description": "A digital signature is offered only for the PDF format of statements and account information confirmations; it may incur a fee defined in the Fees & Charges BRD (Section 3.2.1 (a))."
+    },
+    {
+      "rule_id": "V-10",
+      "rule_name": "Zero opening balance and running balance",
+      "description": "The opening balance on the statement / transaction history is zero; the running balance accumulates from the selected start date to the selected end date (Sections 3.2.2, 5.2.3, BF-AS-VA-05)."
+    },
+    {
+      "rule_id": "V-11",
+      "rule_name": "Account confirmation eligibility",
+      "description": "Account information confirmation is available only for Active accounts and only for same-day requests (BF-AS-VA-06, Section 3.2.1 (a))."
+    },
+    {
+      "rule_id": "V-12",
+      "rule_name": "Favorite limit",
+      "description": "A user can mark at most 10 favorite accounts at user-profile level (Section 3.2.1; BF-AS-VA-07 states 10 as the recommended maximum)."
+    },
+    {
+      "rule_id": "V-13",
+      "rule_name": "Nickname length",
+      "description": "A nickname is at most 30 characters and is stored at user-profile level (Section 3.2.1; BF-AS-VA-07 states 30 as the recommended length)."
+    },
+    {
+      "rule_id": "V-14",
+      "rule_name": "TellerID-Sequence format",
+      "description": "TellerID is shown as 4 characters and Sequence as 5 characters, each left-padded with zeroes, joined as 0004-01234 (Section 5.2.3)."
+    },
+    {
+      "rule_id": "V-15",
+      "rule_name": "Branch-Host Date-PC Time format",
+      "description": "Branch is shown as 5 characters left-padded with zeroes, Host Date as DD/MM/YYYY and PC Time as HH:MM:SS, e.g. 06800 - 16/04/2024 - 11:34:38 (Section 5.2.3)."
+    },
+    {
+      "rule_id": "V-16",
+      "rule_name": "Search and filter behaviour",
+      "description": "Partial keyword search applies across all information fields and all virtual accounts on all pages, not just the visible page; when no record matches, a notification is displayed (Section 3.2.1, BF-AS-VA-07)."
+    },
+    {
+      "rule_id": "V-17",
+      "rule_name": "Current account redirect entitlement",
+      "description": "Redirect from a virtual account to its linked Current Account screen is offered only to users granted that entitlement (Section 3.2.2)."
+    },
+    {
+      "rule_id": "V-18",
+      "rule_name": "Statement record volume",
+      "description": "Statements must support large record volumes; the current platform limitation is 10,000 records per statement (BF-AS-VA-05)."
+    },
+    {
+      "rule_id": "V-19",
+      "rule_name": "Audit trail of access and downloads",
+      "description": "All access and downloads are recorded with user identity and timestamp and retained for the regulatory minimum period (Section 7)."
+    },
+    {
+      "rule_id": "V-20",
+      "rule_name": "Personal data protection",
+      "description": "Personal data is handled in accordance with Vietnam's Law on Cybersecurity and the bank's data privacy policy (Sections 3.1, 7)."
+    },
+    {
+      "rule_id": "V-21",
+      "rule_name": "Virtual account status values",
+      "description": "Virtual account status is Active or Closed (Sections 5.2.1, 5.2.2)."
+    },
+    {
+      "rule_id": "V-22",
+      "rule_name": "Inflow measures",
+      "description": "Today's inflow is the total inflow into the virtual account today; month-to-date credits is the total inflow from the first day of the current month up to the current date/time (BF-AS-VA-03, Section 5.2.2)."
+    },
+    {
+      "rule_id": "V-23",
+      "rule_name": "Recent transactions count",
+      "description": "Account details show the last 10 transactions with a View more route to the transaction history (BF-AS-VA-03)."
+    },
+    {
+      "rule_id": "V-24",
+      "rule_name": "Column preference persistence",
+      "description": "Column order and visibility are saved automatically per user and reused at future logins until changed or reset to default (Section 3.2.1)."
+    }
+  ],
+  "boundary_items": [
+    {
+      "id": "BND-001",
+      "text": "Digital signature fees are defined in the Fees & Charges BRD; this module offers the signature option but does not determine the charging event, tariff, VAT or waiver.",
+      "kind": "other-module",
+      "routing": "story-dependency"
+    },
+    {
+      "id": "BND-002",
+      "text": "Virtual account data and entitlements come from the Corporate Banking System; this module is a UI that aggregates that information and does not maintain the VA master data or configure entitlements.",
+      "kind": "other-module",
+      "routing": "story-dependency"
+    },
+    {
+      "id": "BND-003",
+      "text": "Virtual Account Smart-Search (Section 10 Additional Feature Functionalities: global fuzzy search across accounts and transaction references) is a proposed feature not confirmed for committed scope.",
+      "kind": "deferred",
+      "routing": "epic-record"
+    },
+    {
+      "id": "BND-004",
+      "text": "Full process flow and process flow description (Sections 4.1, 4.2) are deferred to the Design Document.",
+      "kind": "deferred",
+      "routing": "epic-record"
+    },
+    {
+      "id": "BND-005",
+      "text": "[ASSUMPTION] The module is inquiry and servicing only: it does not create, close or maintain virtual accounts and does not initiate debits from a virtual account, even though Debit Amount is displayed in transaction history.",
+      "kind": "negative-requirement",
+      "routing": "story-acceptance-criterion"
+    }
+  ],
+  "reporting_requirements": [
+    {
+      "report_type": "Virtual Account List",
+      "formats": "PDF, XLSX (no digital signature)",
+      "features": "FEAT-002 Virtual account list"
+    },
+    {
+      "report_type": "Virtual Account Statement (single/multi-account)",
+      "formats": "PDF, XLSX, CSV (digital signature for PDF only)",
+      "features": "FEAT-006 Statement generation"
+    },
+    {
+      "report_type": "Account information confirmation (single/multi-account)",
+      "formats": "PDF (digital signature optional); same-day, Active accounts only",
+      "features": "FEAT-007 Account information confirmation"
+    },
+    {
+      "report_type": "Transaction History",
+      "formats": "PDF, XLSX (no digital signature); up to 12 months per query; by VA or by Root VA/Parent",
+      "features": "FEAT-005 Transaction history"
+    }
+  ],
+  "sign_offs": [
+    {
+      "item": "Epic & Feature breakdown (E-001..E-004, 11 features)",
+      "status": "Pending"
+    },
+    {
+      "item": "Story Count Summary (48 stories)",
+      "status": "Pending"
+    }
+  ]
+}

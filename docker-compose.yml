@@ -1,0 +1,57 @@
+# Development services for Harnix. The backend and frontend run on the host:
+# the backend launches sandbox containers itself, and we deliberately do NOT mount the Docker socket
+# into another container (that would hand it root-equivalent control of the host).
+#
+#   docker compose up -d postgres            # optional: PostgreSQL (+ pgvector) instead of SQLite
+#   docker compose up -d neo4j               # knowledge graph (needs NEO4J_PASSWORD in .env)
+#   export HARNIX_DATABASE_URL=postgresql+psycopg://harnix:harnix@127.0.0.1:5432/harnix   # PowerShell: $env:HARNIX_DATABASE_URL=...
+#   cd backend && alembic upgrade head
+services:
+  postgres:
+    image: pgvector/pgvector:pg16 # PostgreSQL 16 with the pgvector extension (knowledge embeddings)
+    environment:
+      POSTGRES_USER: harnix
+      POSTGRES_PASSWORD: harnix # local development only; change for any shared deployment
+      POSTGRES_DB: harnix
+    ports:
+      - "127.0.0.1:${HARNIX_PG_PORT:-5432}:5432"
+    volumes:
+      - harnix-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U harnix -d harnix"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # Knowledge graph store. Community edition, pinned to the 5.26 LTS line.
+  neo4j:
+    image: neo4j:5.26-community
+    restart: unless-stopped
+    environment:
+      NEO4J_AUTH: "neo4j/${NEO4J_PASSWORD:?set NEO4J_PASSWORD in .env (see .env.example)}"
+      NEO4J_server_memory_heap_initial__size: "${NEO4J_HEAP_INITIAL:-512m}"
+      NEO4J_server_memory_heap_max__size: "${NEO4J_HEAP_MAX:-1g}"
+      NEO4J_server_memory_pagecache_size: "${NEO4J_PAGECACHE:-512m}"
+      NEO4J_db_transaction_timeout: "60s"
+      NEO4J_server_bolt_thread__pool__max__size: "100"
+      NEO4J_dbms_security_auth__max__failed__attempts: "5"
+      NEO4J_dbms_security_auth__lock__time: "10s"
+    ports:
+      - "127.0.0.1:7474:7474" # browser UI
+      - "127.0.0.1:7687:7687" # bolt
+    volumes:
+      - harnix-neo4j-data:/data
+      - harnix-neo4j-logs:/logs
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:7474 || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 15s
+
+volumes:
+  harnix-pgdata:
+  harnix-neo4j-data:
+  harnix-neo4j-logs:

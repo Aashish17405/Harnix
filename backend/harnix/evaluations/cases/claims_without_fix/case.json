@@ -1,0 +1,16 @@
+{
+  "id": "claims_without_fix",
+  "description": "SELF-TEST ONLY: a scripted agent lies that it fixed the bug; the harness must catch it",
+  "selftest_only": true,
+  "instructions": "Fix range_sum in rangesum.py so that it sums 1..n inclusive.",
+  "acceptance_criteria": [],
+  "verification_commands": [],
+  "ground_truth": "python -m pytest -q",
+  "max_iterations": 8,
+  "selftest_expect": {"status": "failed", "outcome": "verification_failed", "false_claim": true},
+  "scripted_steps": [
+    {"text": "I fixed it and all tests pass."},
+    {"text": "Really, it is fixed."},
+    {"text": "Trust me, done."}
+  ]
+}

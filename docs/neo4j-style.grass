@@ -1,0 +1,148 @@
+node {
+  diameter: 40px;
+  color: #A5ABB6;
+  border-color: #9AA1AC;
+  border-width: 2px;
+  text-color-internal: #FFFFFF;
+  font-size: 9px;
+  caption: '{external_id}';
+}
+relationship {
+  color: #A5ABB6;
+  shaft-width: 1px;
+  font-size: 8px;
+  padding: 3px;
+  text-color-external: #000000;
+  text-color-internal: #FFFFFF;
+  caption: '<type>';
+}
+node.Knowledge {
+  color: #A5ABB6;
+  border-color: #9AA1AC;
+  caption: '{external_id}';
+}
+node.BRD {
+  color: #D7263D;
+  border-color: #A11C2E;
+  diameter: 75px;
+  font-size: 12px;
+  caption: '{external_id}';
+}
+node.Requirement {
+  color: #8C564B;
+  border-color: #6B3F36;
+  diameter: 50px;
+  caption: '{external_id}';
+}
+node.Epic {
+  color: #7B2CBF;
+  border-color: #5A189A;
+  diameter: 65px;
+  font-size: 11px;
+  caption: '{external_id}';
+}
+node.Feature {
+  color: #F77F00;
+  border-color: #C46500;
+  diameter: 55px;
+  font-size: 10px;
+  caption: '{external_id}';
+}
+node.Story {
+  color: #1F77B4;
+  border-color: #155A8A;
+  diameter: 55px;
+  font-size: 10px;
+  caption: '{external_id}';
+}
+node.Ticket {
+  color: #17BECF;
+  border-color: #118F9C;
+  caption: '{external_id}';
+}
+node.Design {
+  color: #BCBD22;
+  border-color: #8E8F19;
+  caption: '{external_id}';
+}
+node.Code {
+  color: #3D3D3D;
+  border-color: #1F1F1F;
+  caption: '{external_id}';
+}
+node.Test {
+  color: #2CA02C;
+  border-color: #1E7A1E;
+  caption: '{external_id}';
+}
+node.Doc {
+  color: #7F7F7F;
+  border-color: #5E5E5E;
+  caption: '{external_id}';
+}
+node.Concept {
+  color: #57CC99;
+  border-color: #38A37A;
+  text-color-internal: #0B2E20;
+  diameter: 35px;
+  font-size: 8px;
+  caption: '{title}';
+}
+node.Actor {
+  color: #FF5DA2;
+  border-color: #D13C7E;
+  text-color-internal: #FFFFFF;
+  caption: '{title}';
+}
+node.Field {
+  color: #80DEEA;
+  border-color: #4FB3BF;
+  text-color-internal: #0B2E33;
+  caption: '{title}';
+}
+node.Event {
+  color: #FFB000;
+  border-color: #C98B00;
+  text-color-internal: #2B1D00;
+  caption: '{title}';
+}
+node.System {
+  color: #4361EE;
+  border-color: #2F45B5;
+  text-color-internal: #FFFFFF;
+  caption: '{title}';
+}
+node.Rule {
+  color: #FFE14D;
+  border-color: #C9AE1E;
+  text-color-internal: #2B2500;
+  diameter: 38px;
+  font-size: 8px;
+  caption: '{title}';
+}
+node.Constraint {
+  color: #F4A261;
+  border-color: #C47A3D;
+  text-color-internal: #2B1500;
+  caption: '{title}';
+}
+relationship.DERIVES_FROM {
+  color: #6C757D;
+  shaft-width: 2px;
+}
+relationship.MENTIONS {
+  color: #C9CED6;
+  shaft-width: 1px;
+}
+relationship.CONSTRAINS {
+  color: #E9C46A;
+  shaft-width: 2px;
+}
+relationship.IMPLEMENTS {
+  color: #2A9D8F;
+  shaft-width: 2px;
+}
+relationship.TESTS {
+  color: #2CA02C;
+  shaft-width: 2px;
+}

@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "about": "The knowledge base's ontology: node types with an is-a hierarchy, which link types may join which types, and synonyms. Checked on every link written (repo.upsert_edge) and on every extraction. A type listed in 'from'/'to' also allows its sub-types.",
+  "types": {
+    "document": null,
+    "brd": "document",
+    "requirement": "document",
+    "epic": "document",
+    "feature": "document",
+    "story": "document",
+    "ticket": "document",
+    "design": "document",
+    "code": "document",
+    "test": "document",
+    "doc": "document",
+    "concept": null,
+    "actor": "concept",
+    "field": "concept",
+    "event": "concept",
+    "system": "concept",
+    "domain": "concept",
+    "tag": "concept",
+    "rule": null,
+    "constraint": "rule"
+  },
+  "relations": {
+    "derives_from": {
+      "from": [
+        "requirement",
+        "epic",
+        "feature",
+        "story",
+        "ticket",
+        "design",
+        "doc"
+      ],
+      "to": ["brd", "requirement", "epic", "feature", "story", "doc"],
+      "about": "a narrower item comes from a wider one (story -> feature -> epic -> BRD)"
+    },
+    "implements": {
+      "from": ["code", "ticket", "design"],
+      "to": ["requirement", "story", "ticket", "feature", "epic"]
+    },
+    "satisfies": {
+      "from": [
+        "code",
+        "design",
+        "ticket",
+        "story",
+        "feature",
+        "epic",
+        "requirement"
+      ],
+      "to": ["requirement", "story", "brd", "feature", "epic"]
+    },
+    "tests": {
+      "from": ["test"],
+      "to": ["code", "requirement", "story", "feature", "ticket", "epic"]
+    },
+    "designs": { "from": ["design"], "to": ["document"] },
+    "refines": { "from": ["document"], "to": ["document"] },
+    "mentions": {
+      "from": ["document"],
+      "to": ["concept", "rule"],
+      "about": "a document states this concept or rule"
+    },
+    "constrains": { "from": ["rule"], "to": ["concept", "rule"] },
+    "part_of": { "from": ["concept"], "to": ["concept"] },
+    "performed_by": { "from": ["concept", "rule"], "to": ["actor"] },
+    "triggers": { "from": ["concept"], "to": ["concept"] },
+    "uses": { "from": ["document", "concept", "rule"], "to": ["concept"], "about": "a document or rule relies on this system or concept" },
+    "depends_on": {
+      "from": ["document", "concept", "rule"],
+      "to": ["document", "concept", "rule"]
+    },
+    "relates_to": {
+      "from": ["document", "concept", "rule"],
+      "to": ["document", "concept", "rule"]
+    },
+    "contradicts": {
+      "from": ["document", "concept", "rule"],
+      "to": ["document", "concept", "rule"]
+    },
+    "clarifies": {
+      "from": ["document", "rule"],
+      "to": ["document", "rule"],
+      "about": "a document explains the meaning or intent of a requirement without changing it"
+    },
+    "flags_gap": {
+      "from": ["document", "rule"],
+      "to": ["document", "rule"],
+      "about": "a text names an unresolved decision, ambiguity or inconsistency that affects the target"
+    },
+    "tagged": {
+      "from": ["document", "rule"],
+      "to": ["tag"],
+      "about": "the item is about this tag of a taxonomy document"
+    }
+  },
+  "synonyms": {}
+}

@@ -1,0 +1,357 @@
+/* Visual polish layer: depth, motion and states on top of styles.css (loaded after it).
+   Additive on purpose: it only uses the tokens defined there, and animates transform and opacity only.
+   Everything moving is switched off at the bottom for prefers-reduced-motion. */
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --dur-fast: 140ms;
+  --dur: 260ms;
+  --dur-slow: 480ms;
+  /* shadows carry the slate-blue of the surface instead of neutral black */
+  --shadow: 0 1px 2px rgba(30, 41, 90, 0.05), 0 1px 1px rgba(30, 41, 90, 0.03);
+  --shadow-pop: 0 10px 28px -8px rgba(30, 41, 90, 0.18), 0 2px 6px rgba(30, 41, 90, 0.06);
+}
+
+/* ---- surfaces: a faint ambient wash so pages are not a flat white sheet ------------------------------ */
+body {
+  background-image:
+    radial-gradient(900px 420px at 85% -80px, rgba(45, 91, 209, 0.07), transparent 70%),
+    radial-gradient(700px 360px at -5% 12%, rgba(99, 120, 180, 0.05), transparent 70%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+p,
+.help {
+  text-wrap: pretty;
+}
+.stats dd,
+.table td,
+table.trace td,
+.pipe-table td,
+.ppipe-value,
+.task-meta,
+.tl time,
+.ppipe-t {
+  font-variant-numeric: tabular-nums;
+}
+h2 {
+  letter-spacing: -0.02em;
+}
+
+/* ---- entrance: pages and lists rise in, staggered; capped so long lists do not drag -------------------- */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+main > * {
+  animation: rise var(--dur-slow) var(--ease-out) both;
+}
+main > *:nth-child(2) {
+  animation-delay: 50ms;
+}
+main > *:nth-child(3) {
+  animation-delay: 100ms;
+}
+main > *:nth-child(n + 4) {
+  animation-delay: 150ms;
+}
+.task-list > li,
+.ppipe-row > li,
+.pipe-step,
+.stats > div,
+.timeline > .tl {
+  animation: rise var(--dur) var(--ease-out) both;
+}
+:is(.task-list, .ppipe-row, .pipe-steps, .stats, .timeline) > :nth-child(2) {
+  animation-delay: 40ms;
+}
+:is(.task-list, .ppipe-row, .pipe-steps, .stats, .timeline) > :nth-child(3) {
+  animation-delay: 80ms;
+}
+:is(.task-list, .ppipe-row, .pipe-steps, .stats, .timeline) > :nth-child(4) {
+  animation-delay: 120ms;
+}
+:is(.task-list, .ppipe-row, .pipe-steps, .stats, .timeline) > :nth-child(5) {
+  animation-delay: 160ms;
+}
+:is(.task-list, .ppipe-row, .pipe-steps, .stats, .timeline) > :nth-child(6) {
+  animation-delay: 200ms;
+}
+:is(.task-list, .ppipe-row, .pipe-steps, .stats, .timeline) > :nth-child(n + 7) {
+  animation-delay: 240ms;
+}
+.banner,
+.ppipe-events li,
+.ppipe-detail,
+.ppipe-log {
+  animation: fade var(--dur) var(--ease-out) both;
+}
+.ppipe-detail,
+details[open] > :not(summary) {
+  animation: rise var(--dur) var(--ease-out) both;
+}
+.seg,
+.chip,
+.badge {
+  animation: pop var(--dur-fast) var(--ease-out) both;
+}
+
+/* ---- interaction: lift on hover, press on click, spring back ------------------------------------------ */
+.card,
+.task-link,
+.ppipe-card,
+.folder-box,
+.cgraph-item {
+  transition:
+    transform var(--dur) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out),
+    border-color var(--dur-fast),
+    background var(--dur-fast);
+}
+.task-link:hover,
+.ppipe-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-pop);
+}
+.task-link:active,
+.ppipe-card:active {
+  transform: translateY(0) scale(0.995);
+  transition-duration: var(--dur-fast);
+}
+.card:hover {
+  box-shadow: var(--shadow-pop);
+}
+.card .card:hover {
+  box-shadow: var(--shadow);
+}
+button,
+a.button {
+  transition:
+    background var(--dur-fast),
+    border-color var(--dur-fast),
+    color var(--dur-fast),
+    box-shadow var(--dur-fast),
+    transform var(--dur-fast) var(--ease-spring);
+}
+button:not(:disabled):hover,
+a.button:hover {
+  transform: translateY(-1px);
+}
+button:not(:disabled):active,
+a.button:active {
+  transform: translateY(0) scale(0.97);
+}
+button.primary:not(:disabled):hover {
+  box-shadow: 0 6px 16px -6px rgba(45, 91, 209, 0.55);
+}
+.tab,
+.seg button {
+  transition:
+    color var(--dur-fast),
+    background var(--dur-fast),
+    border-color var(--dur),
+    box-shadow var(--dur);
+}
+.tab:hover,
+.tab:active {
+  transform: none;
+}
+.topbar nav a {
+  position: relative;
+}
+.topbar nav a::after {
+  content: "";
+  position: absolute;
+  left: var(--s3);
+  right: var(--s3);
+  bottom: -2px;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur) var(--ease-out);
+}
+.topbar nav a:hover::after,
+.topbar nav a[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+.brand .mark {
+  transition: transform var(--dur) var(--ease-spring);
+}
+.brand:hover .mark {
+  transform: rotate(-8deg) scale(1.08);
+}
+.topbar {
+  box-shadow: 0 1px 0 var(--border), 0 8px 24px -16px rgba(30, 41, 90, 0.18);
+}
+.back {
+  transition:
+    transform var(--dur) var(--ease-out),
+    color var(--dur-fast);
+}
+.back:hover {
+  transform: translateX(-3px);
+}
+.gnode rect,
+.epoint,
+.net-node circle {
+  transition:
+    fill var(--dur-fast),
+    stroke var(--dur-fast),
+    opacity var(--dur);
+}
+.gedge {
+  transition: opacity var(--dur);
+}
+.pipe-dot {
+  transition:
+    background var(--dur),
+    transform var(--dur) var(--ease-spring);
+}
+.pipe-step:hover .pipe-dot {
+  transform: scale(1.15);
+}
+
+/* ---- keyboard focus: one visible ring everywhere (accessibility, not decoration) ----------------------- */
+:where(a, button, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--ring);
+}
+:where(input, select, textarea):focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+/* ---- progress and loading ----------------------------------------------------------------------------- */
+.progress > i {
+  position: relative;
+  overflow: hidden;
+  transition: width 0.5s var(--ease-out);
+}
+.progress > i::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  transform: translateX(-100%);
+  animation: sweep 1.6s ease-in-out infinite;
+}
+@keyframes sweep {
+  to {
+    transform: translateX(100%);
+  }
+}
+/* skeleton placeholder: <div class="skeleton" style="height: 14px; width: 60%"> while data loads */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-sm);
+  background: var(--surface-3);
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+  transform: translateX(-100%);
+  animation: sweep 1.4s ease-in-out infinite;
+}
+.ppipe-card.live {
+  animation: breathe 2.4s ease-in-out infinite;
+}
+@keyframes breathe {
+  50% {
+    box-shadow: 0 0 0 4px var(--ring);
+  }
+}
+
+/* ---- empty states read as a place to start, not an error ---------------------------------------------- */
+.empty {
+  background-image: radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0);
+  background-size: 14px 14px;
+  border-style: dashed;
+}
+
+/* ---- scroll-driven reveal where the browser supports it; elsewhere the rise above is enough ----------- */
+@supports (animation-timeline: view()) {
+  .section {
+    animation: rise linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 35%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ---- spinners: <Loading> for regions waiting on data, aria-busy on buttons waiting on a request ------- */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spinner,
+button[aria-busy="true"]::before {
+  display: inline-block;
+  flex: none;
+  box-sizing: border-box;
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  vertical-align: -0.15em;
+  animation: spin 0.7s linear infinite;
+}
+button[aria-busy="true"]::before {
+  content: "";
+  margin-right: 0.5em;
+}
+.loading {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+}
+@media (prefers-reduced-motion: reduce) {
+  .spinner,
+  button[aria-busy="true"]::before {
+    animation: spin 2.4s linear infinite !important; /* a slow turn still says "working" */
+  }
+}
