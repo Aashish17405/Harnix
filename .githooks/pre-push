@@ -1,0 +1,44 @@
+#!/bin/sh
+# Harnix pre-push hook: runs verification test suite before pushing to remote.
+set -e
+
+root=$(git rev-parse --show-toplevel) || exit 1
+
+echo "[pre-push] Running pre-push verification tests..."
+
+# 1. Backend tests
+if [ -d "$root/backend" ]; then
+  cd "$root/backend" || exit 1
+
+  # Add local venv to PATH if present
+  for d in .venv/Scripts .venv/bin venv/Scripts venv/bin; do
+    if [ -d "$d" ]; then
+      PATH="$PWD/$d:$PATH"
+    fi
+  done
+
+  if command -v pytest >/dev/null 2>&1; then
+    echo "[pre-push] Running backend policy and security tests..."
+    pytest tests/test_policies.py -q || {
+      echo "[pre-push] ERROR: Backend tests failed! Push aborted." >&2
+      exit 1
+    }
+  else
+    echo "[pre-push] Note: pytest not found in PATH or .venv. Skipping test suite."
+  fi
+fi
+
+# 2. Frontend checks
+if [ -d "$root/frontend/node_modules" ]; then
+  cd "$root/frontend" || exit 1
+  if npm run | grep -q "typecheck"; then
+    echo "[pre-push] Running frontend typecheck..."
+    npm run typecheck --silent || {
+      echo "[pre-push] ERROR: Frontend typecheck failed! Push aborted." >&2
+      exit 1
+    }
+  fi
+fi
+
+echo "[pre-push] All pre-push checks passed. Proceeding with push."
+exit 0

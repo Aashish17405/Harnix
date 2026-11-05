@@ -1,0 +1,79 @@
+#!/bin/sh
+# Harnix pre-commit hook: checks code quality before committing.
+set -e
+
+root=$(git rev-parse --show-toplevel) || exit 1
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+
+fail() {
+  echo "" >&2
+  echo "[pre-commit] ERROR: Check '$1' failed." >&2
+  echo "[pre-commit] Please resolve the issues before committing." >&2
+  echo "" >&2
+  exit 1
+}
+
+# 1. Backend Checks
+if echo "$staged" | grep -q '^backend/'; then
+  echo "[pre-commit] Checking backend changes..."
+  cd "$root/backend" || exit 1
+
+  # Add local venv to PATH if present
+  for d in .venv/Scripts .venv/bin venv/Scripts venv/bin; do
+    if [ -d "$d" ]; then
+      PATH="$PWD/$d:$PATH"
+    fi
+  done
+
+  # Verify Python syntax on staged backend files
+  echo "[pre-commit] Verifying Python syntax..."
+  python -c "
+import sys, py_compile
+files = [line.strip() for line in '''$staged'''.splitlines() if line.strip().startswith('backend/') and line.strip().endswith('.py')]
+failed = False
+for f in files:
+    try:
+        py_compile.compile(f, doraise=True)
+    except Exception as e:
+        print(f'Syntax error in {f}: {e}', file=sys.stderr)
+        failed = True
+if failed:
+    sys.exit(1)
+" || fail "Python syntax verification"
+
+  # Ruff linter and formatter if available
+  if command -v ruff >/dev/null 2>&1; then
+    echo "[pre-commit] Running ruff check..."
+    ruff check . || fail "ruff check"
+    echo "[pre-commit] Running ruff format check..."
+    ruff format --check . || fail "ruff format"
+  fi
+
+  # Pyright type check if available
+  if command -v pyright >/dev/null 2>&1; then
+    echo "[pre-commit] Running pyright..."
+    pyright || fail "pyright"
+  fi
+fi
+
+# 2. Frontend Checks
+if echo "$staged" | grep -q '^frontend/'; then
+  echo "[pre-commit] Checking frontend changes..."
+  cd "$root/frontend" || exit 1
+
+  if [ -d "node_modules" ]; then
+    if npm run | grep -q "lint"; then
+      echo "[pre-commit] Running frontend lint..."
+      npm run lint --silent || fail "frontend lint"
+    fi
+    if npm run | grep -q "typecheck"; then
+      echo "[pre-commit] Running frontend typecheck..."
+      npm run typecheck --silent || fail "frontend typecheck"
+    fi
+  else
+    echo "[pre-commit] Note: frontend/node_modules not found, skipping frontend build checks."
+  fi
+fi
+
+echo "[pre-commit] All pre-commit checks passed successfully."
+exit 0
