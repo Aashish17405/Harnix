@@ -77,3 +77,4 @@ fi
 
 echo "[pre-commit] All pre-commit checks passed successfully."
 exit 0
+

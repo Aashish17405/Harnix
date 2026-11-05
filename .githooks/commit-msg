@@ -39,3 +39,4 @@ if [ ${#subject} -gt 100 ]; then
 fi
 
 exit 0
+
