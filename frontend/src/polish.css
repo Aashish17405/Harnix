@@ -12,13 +12,9 @@
   --shadow-pop: 0 10px 28px -8px rgba(30, 41, 90, 0.18), 0 2px 6px rgba(30, 41, 90, 0.06);
 }
 
-/* ---- surfaces: a faint ambient wash so pages are not a flat white sheet ------------------------------ */
+/* ---- surfaces: clean flat background ------------------------------ */
 body {
-  background-image:
-    radial-gradient(900px 420px at 85% -80px, rgba(45, 91, 209, 0.07), transparent 70%),
-    radial-gradient(700px 360px at -5% 12%, rgba(99, 120, 180, 0.05), transparent 70%);
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  background-color: var(--bg);
 }
 h1,
 h2,
@@ -263,14 +259,12 @@ button.primary:not(:disabled):hover {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
-  transform: translateX(-100%);
-  animation: sweep 1.6s ease-in-out infinite;
+  background: rgba(255, 255, 255, 0.3);
+  animation: pulse-sweep 1.6s ease-in-out infinite;
 }
-@keyframes sweep {
-  to {
-    transform: translateX(100%);
-  }
+@keyframes pulse-sweep {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
 }
 /* skeleton placeholder: <div class="skeleton" style="height: 14px; width: 60%"> while data loads */
 .skeleton {
@@ -283,9 +277,8 @@ button.primary:not(:disabled):hover {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
-  transform: translateX(-100%);
-  animation: sweep 1.4s ease-in-out infinite;
+  background: rgba(255, 255, 255, 0.4);
+  animation: pulse-sweep 1.4s ease-in-out infinite;
 }
 .ppipe-card.live {
   animation: breathe 2.4s ease-in-out infinite;
@@ -298,8 +291,6 @@ button.primary:not(:disabled):hover {
 
 /* ---- empty states read as a place to start, not an error ---------------------------------------------- */
 .empty {
-  background-image: radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0);
-  background-size: 14px 14px;
   border-style: dashed;
 }
 

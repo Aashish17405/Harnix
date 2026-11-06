@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { CheckIcon, CopyIcon } from "./Icons";
+import { Copy, Check } from "@phosphor-icons/react";
 
 export function QuickstartSection() {
   const [os, setOs] = useState<"win" | "bash">("win");
@@ -12,8 +12,8 @@ export function QuickstartSection() {
     if (mode === "mock") {
       if (os === "win") {
         return `# 1. Clone repository & initialize backend venv
-git clone https://github.com/your-org/harnix.git
-cd harnix\\backend
+git clone https://github.com/Aashish17405/Harnix.git
+cd Harnix\\backend
 python -m venv .venv
 .\\.venv\\Scripts\\Activate.ps1
 pip install -e ".[dev]"
@@ -36,8 +36,8 @@ npm install
 npm run dev     # Open http://127.0.0.1:5173`;
       } else {
         return `# 1. Clone repository & initialize backend venv
-git clone https://github.com/your-org/harnix.git
-cd harnix/backend
+git clone https://github.com/Aashish17405/Harnix.git
+cd Harnix/backend
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
@@ -59,37 +59,42 @@ cd ../frontend
 npm install
 npm run dev     # Open http://127.0.0.1:5173`;
       }
-    }
-
-    // Live LLM Provider Mode
-    if (os === "win") {
-      return `# 1. Backend environment setup
-cd backend
-.\\.venv\\Scripts\\Activate.ps1
-cp .env.example .env
-
-# 2. Configure provider & budget cap in .env:
-# HARNIX_PROVIDER=openai
-# HARNIX_MODEL=gpt-6-luna
-# OPENAI_API_KEY=sk-...
-# HARNIX_EXECUTION_MODE=docker
-
-# 3. Run a verified task directly from the CLI
-harnix "fix failing test in rangesum.py" --verify "pytest tests/test_rangesum.py"`;
     } else {
-      return `# 1. Backend environment setup
-cd backend
+      if (os === "win") {
+        return `# 1. Clone repository & initialize backend venv
+git clone https://github.com/Aashish17405/Harnix.git
+cd Harnix\\backend
+python -m venv .venv
+.\\.venv\\Scripts\\Activate.ps1
+pip install -e ".[dev]"
+
+# 2. Configure Live LLM & Docker sandbox
+$env:HARNIX_PROVIDER="openai"            # or "anthropic"
+$env:OPENAI_API_KEY="sk-..."             # your API key
+$env:HARNIX_EXECUTION_MODE="docker"       # Hardened sandbox execution
+$env:HARNIX_ALLOWED_REPO_ROOTS=(Resolve-Path .).Path
+
+# 3. Run migrations & start server
+alembic upgrade head
+python -m uvicorn harnix.api.app:app_factory --factory --host 127.0.0.1 --port 8000`;
+      } else {
+        return `# 1. Clone repository & initialize backend venv
+git clone https://github.com/Aashish17405/Harnix.git
+cd Harnix/backend
+python3 -m venv .venv
 source .venv/bin/activate
-cp .env.example .env
+pip install -e ".[dev]"
 
-# 2. Configure provider & budget cap in .env:
-# export HARNIX_PROVIDER=openai
-# export HARNIX_MODEL=gpt-6-luna
-# export OPENAI_API_KEY=sk-...
-# export HARNIX_EXECUTION_MODE=docker
+# 2. Configure Live LLM & Docker sandbox
+export HARNIX_PROVIDER=openai            # or "anthropic"
+export OPENAI_API_KEY="sk-..."           # your API key
+export HARNIX_EXECUTION_MODE=docker      # Hardened sandbox execution
+export HARNIX_ALLOWED_REPO_ROOTS="$PWD"
 
-# 3. Run a verified task directly from the CLI
-harnix "fix failing test in rangesum.py" --verify "pytest tests/test_rangesum.py"`;
+# 3. Run migrations & start server
+alembic upgrade head
+python3 -m uvicorn harnix.api.app:app_factory --factory --host 127.0.0.1 --port 8000`;
+      }
     }
   };
 
@@ -100,74 +105,74 @@ harnix "fix failing test in rangesum.py" --verify "pytest tests/test_rangesum.py
   };
 
   return (
-    <section id="quickstart" className="py-20 bg-[#0B0D12] border-b border-white/10">
+    <section id="quickstart" className="py-24 bg-panel-subtle border-b border-panel-border transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10 pb-6 border-b border-white/10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12 pb-6 border-b border-panel-border">
           <div>
-            <div className="flex items-center gap-2 font-mono text-xs text-neutral-400 uppercase tracking-wider mb-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <div className="flex items-center gap-2 font-mono text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
               <span>05 // Quickstart</span>
             </div>
-            <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-white">
-              Get running in under 60 seconds.
+            <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground">
+              Run locally in 60 seconds.
             </h2>
           </div>
-          <p className="text-neutral-400 font-mono text-xs max-w-md">
-            Test the entire deterministic verification engine locally using mock mode without an API key or spend.
+          <p className="text-neutral-600 dark:text-neutral-400 font-mono text-xs max-w-md">
+            Spin up the complete test harness locally. Zero external API keys needed in mock mode.
           </p>
         </div>
 
         {/* Console Box */}
-        <div className="sys-panel overflow-hidden border border-neutral-700/80 max-w-4xl mx-auto">
+        <div className="sys-panel overflow-hidden border border-panel-border rounded-2xl shadow-xl max-w-4xl mx-auto bg-panel">
           
           {/* Controls Bar */}
-          <div className="p-4 bg-neutral-900 border-b border-white/10 flex flex-wrap items-center justify-between gap-4">
+          <div className="p-4 bg-panel-subtle border-b border-panel-border flex flex-wrap items-center justify-between gap-4">
             
             {/* Mode Selector */}
             <div className="flex items-center gap-2 font-mono text-xs">
               <button
                 onClick={() => setMode("mock")}
-                className={`px-3 py-1.5 rounded transition-colors ${
+                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
                   mode === "mock"
-                    ? "bg-emerald-500 text-black font-bold"
-                    : "bg-neutral-800 text-neutral-300 hover:text-white"
+                    ? "bg-emerald-600 text-white dark:bg-emerald-500 dark:text-black font-bold shadow-xs"
+                    : "bg-panel text-neutral-600 dark:text-neutral-400 hover:text-foreground border border-panel-border"
                 }`}
               >
                 Mock Demo (0 Keys)
               </button>
               <button
                 onClick={() => setMode("live")}
-                className={`px-3 py-1.5 rounded transition-colors ${
+                className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
                   mode === "live"
-                    ? "bg-emerald-500 text-black font-bold"
-                    : "bg-neutral-800 text-neutral-300 hover:text-white"
+                    ? "bg-emerald-600 text-white dark:bg-emerald-500 dark:text-black font-bold shadow-xs"
+                    : "bg-panel text-neutral-600 dark:text-neutral-400 hover:text-foreground border border-panel-border"
                 }`}
               >
-                Live LLM (OpenAI / Anthropic)
+                Live LLM Mode
               </button>
             </div>
 
             {/* OS Selector & Copy */}
             <div className="flex items-center gap-3 font-mono text-xs">
-              <div className="flex items-center gap-1 bg-neutral-800 p-1 rounded">
+              <div className="flex items-center gap-1 bg-neutral-200/60 dark:bg-neutral-800 p-1 rounded-lg">
                 <button
                   onClick={() => setOs("win")}
-                  className={`px-2.5 py-1 rounded transition-colors ${
+                  className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
                     os === "win"
-                      ? "bg-neutral-700 text-white font-semibold"
-                      : "text-neutral-400 hover:text-white"
+                      ? "bg-white text-neutral-900 dark:bg-neutral-700 dark:text-white font-semibold shadow-xs"
+                      : "text-neutral-600 dark:text-neutral-400 hover:text-foreground"
                   }`}
                 >
                   PowerShell
                 </button>
                 <button
                   onClick={() => setOs("bash")}
-                  className={`px-2.5 py-1 rounded transition-colors ${
+                  className={`px-2.5 py-1 rounded-md transition-colors cursor-pointer ${
                     os === "bash"
-                      ? "bg-neutral-700 text-white font-semibold"
-                      : "text-neutral-400 hover:text-white"
+                      ? "bg-white text-neutral-900 dark:bg-neutral-700 dark:text-white font-semibold shadow-xs"
+                      : "text-neutral-600 dark:text-neutral-400 hover:text-foreground"
                   }`}
                 >
                   Bash / Zsh
@@ -176,17 +181,17 @@ harnix "fix failing test in rangesum.py" --verify "pytest tests/test_rangesum.py
 
               <button
                 onClick={handleCopy}
-                className="flex items-center gap-1 px-3 py-1.5 rounded bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white border border-neutral-700 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-panel hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 border border-panel-border transition-colors font-medium shadow-xs cursor-pointer"
                 title="Copy instructions"
               >
                 {copied ? (
                   <>
-                    <CheckIcon className="w-3.5 h-3.5 text-emerald-400" />
-                    <span className="text-emerald-400 text-xs">Copied</span>
+                    <Check size={14} weight="bold" className="text-emerald-500" />
+                    <span className="text-emerald-500 text-xs">Copied</span>
                   </>
                 ) : (
                   <>
-                    <CopyIcon className="w-3.5 h-3.5" />
+                    <Copy size={14} weight="bold" />
                     <span className="text-xs">Copy</span>
                   </>
                 )}
@@ -196,16 +201,16 @@ harnix "fix failing test in rangesum.py" --verify "pytest tests/test_rangesum.py
           </div>
 
           {/* Terminal Code Display */}
-          <div className="p-6 bg-[#090A0E] font-mono text-xs text-neutral-200 overflow-x-auto leading-relaxed max-h-[460px] overflow-y-auto">
+          <div className="p-6 bg-neutral-950 font-mono text-xs text-neutral-200 overflow-x-auto leading-relaxed max-h-[440px] overflow-y-auto">
             <pre className="whitespace-pre-wrap font-mono">
               {getCodeSnippet()}
             </pre>
           </div>
 
           {/* Bottom Bar */}
-          <div className="p-3 bg-neutral-900 border-t border-white/10 flex items-center justify-between font-mono text-[11px] text-neutral-400">
+          <div className="p-3 bg-panel-subtle border-t border-panel-border flex items-center justify-between font-mono text-[11px] text-neutral-500 dark:text-neutral-400">
             <span>REQUIRES: PYTHON 3.11+ &bull; NODE.JS 18+</span>
-            <span className="text-neutral-300">DOCKER ENGINE OPTIONAL FOR LOCAL MOCK</span>
+            <span className="text-emerald-600 dark:text-emerald-400 font-semibold">DOCKER ENGINE OPTIONAL FOR LOCAL MOCK</span>
           </div>
 
         </div>

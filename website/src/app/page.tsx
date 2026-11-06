@@ -7,10 +7,12 @@ import { TriModalExperience } from "@/components/TriModalExperience";
 import { BenchmarkSection } from "@/components/BenchmarkSection";
 import { QuickstartSection } from "@/components/QuickstartSection";
 import { Footer } from "@/components/Footer";
+import { ScrollProgress } from "@/components/ScrollProgress";
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen bg-[#0B0D12]">
+    <div className="flex flex-col min-h-screen bg-background text-foreground transition-colors duration-200">
+      <ScrollProgress />
       <Navbar />
       <main className="flex-1">
         <HeroSection />

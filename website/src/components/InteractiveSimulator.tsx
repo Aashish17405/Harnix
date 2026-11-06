@@ -1,6 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
+import {
+  CaretLeft,
+  CaretRight
+} from "@phosphor-icons/react";
 
 interface InspectionStep {
   stepNum: number;
@@ -204,71 +208,71 @@ export function InteractiveSimulator() {
   };
 
   return (
-    <section id="inspector" className="py-20 bg-[#0E1017] border-b border-white/10">
+    <section id="inspector" className="py-20 bg-neutral-50 dark:bg-[#0E1017] border-b border-neutral-200 dark:border-white/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10 pb-6 border-b border-white/10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10 pb-6 border-b border-neutral-200 dark:border-white/10">
           <div>
-            <div className="flex items-center gap-2 font-mono text-xs text-neutral-400 uppercase tracking-wider mb-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+            <div className="flex items-center gap-2 font-mono text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
               <span>03 // Live Systems Inspector</span>
             </div>
-            <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-white">
+            <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
               Inspect how Harnix intercepts &amp; verifies.
             </h2>
           </div>
-          <p className="text-neutral-400 font-mono text-xs max-w-md">
+          <p className="text-neutral-600 dark:text-neutral-400 font-mono text-xs max-w-md">
             Interactive trace replay: Step through baseline checks, policy gates, Docker execution, and independent verification.
           </p>
         </div>
 
         {/* Scenario Tabs */}
-        <div className="flex flex-wrap gap-2 mb-6">
+        <div className="flex flex-wrap gap-2.5 mb-6">
           {SCENARIOS.map((sc, idx) => (
             <button
               key={sc.id}
               onClick={() => handleScenarioChange(idx)}
-              className={`px-4 py-2 rounded text-xs font-mono transition-colors border text-left ${
+              className={`px-4 py-2.5 rounded-lg text-xs font-mono transition-all border text-left cursor-pointer ${
                 activeScenarioIdx === idx
-                  ? "bg-neutral-800 text-white border-neutral-600 font-semibold"
-                  : "bg-neutral-900/60 text-neutral-400 border-white/5 hover:text-neutral-200 hover:bg-neutral-800/40"
+                  ? "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white border-neutral-400 dark:border-neutral-500 font-bold shadow-sm"
+                  : "bg-neutral-100 dark:bg-neutral-900/60 text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-white/5 hover:bg-white dark:hover:bg-neutral-800/60 hover:text-neutral-900 dark:hover:text-white"
               }`}
             >
               <div>{sc.label}</div>
-              <div className="text-[10px] text-neutral-400 truncate max-w-[200px]">{sc.subtitle}</div>
+              <div className="text-[10px] text-neutral-500 dark:text-neutral-400 truncate max-w-[220px]">{sc.subtitle}</div>
             </button>
           ))}
         </div>
 
         {/* Main Inspector Console Box */}
-        <div className="sys-panel overflow-hidden border border-neutral-700/80">
+        <div className="sys-panel overflow-hidden border border-neutral-300 dark:border-neutral-700/80 shadow-lg">
           
           {/* Top Bar with Step Indicators */}
-          <div className="p-4 bg-neutral-900 border-b border-white/10 flex flex-wrap items-center justify-between gap-4">
+          <div className="p-4 bg-neutral-100 dark:bg-neutral-900 border-b border-neutral-200 dark:border-white/10 flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <span className="font-mono text-xs font-bold text-white uppercase">
+              <span className="font-mono text-xs font-bold text-neutral-900 dark:text-white uppercase">
                 {scenario.label}
               </span>
-              <span className="text-neutral-500 font-mono text-xs">•</span>
-              <span className="font-mono text-xs text-neutral-400">
-                TASK: <span className="text-neutral-200">{scenario.task}</span>
+              <span className="text-neutral-400 dark:text-neutral-500 font-mono text-xs">•</span>
+              <span className="font-mono text-xs text-neutral-600 dark:text-neutral-400">
+                TASK: <span className="text-neutral-900 dark:text-neutral-200 font-medium">{scenario.task}</span>
               </span>
             </div>
 
             {/* Stepper Buttons */}
             <div className="flex items-center gap-1.5 font-mono text-xs">
-              <span className="text-neutral-400 mr-2 text-[11px]">
+              <span className="text-neutral-500 dark:text-neutral-400 mr-2 text-[11px]">
                 Step {activeStepIdx + 1} of {scenario.steps.length}
               </span>
               {scenario.steps.map((s, idx) => (
                 <button
                   key={idx}
                   onClick={() => setActiveStepIdx(idx)}
-                  className={`w-6 h-6 rounded flex items-center justify-center font-mono text-xs transition-colors ${
+                  className={`w-6 h-6 rounded flex items-center justify-center font-mono text-xs transition-colors cursor-pointer ${
                     activeStepIdx === idx
-                      ? "bg-emerald-500 text-black font-bold"
-                      : "bg-neutral-800 text-neutral-400 hover:text-white"
+                      ? "bg-neutral-900 text-white dark:bg-emerald-500 dark:text-black font-bold"
+                      : "bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-300 dark:hover:text-white"
                   }`}
                 >
                   {idx + 1}
@@ -278,28 +282,28 @@ export function InteractiveSimulator() {
           </div>
 
           {/* Step Detail Header */}
-          <div className="p-5 bg-[#12151E] border-b border-white/5 space-y-2">
+          <div className="p-5 bg-white dark:bg-[#12151E] border-b border-neutral-200 dark:border-white/5 space-y-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
-                <span className="sys-badge bg-neutral-800 text-neutral-300 border border-neutral-700">
+                <span className="sys-badge bg-neutral-100 text-neutral-700 border border-neutral-300 dark:bg-neutral-800 dark:text-neutral-300 dark:border-neutral-700">
                   {step.phase}
                 </span>
-                <h3 className="text-white font-bold text-sm sm:text-base font-mono">
+                <h3 className="text-neutral-900 dark:text-white font-bold text-sm sm:text-base font-mono">
                   {step.title}
                 </h3>
               </div>
-              <div className="font-mono text-xs px-2.5 py-0.5 rounded bg-emerald-950/40 border border-emerald-500/30 text-emerald-300">
+              <div className="font-mono text-xs px-2.5 py-1 rounded bg-emerald-50 text-emerald-800 border border-emerald-300 dark:bg-emerald-950/40 dark:border-emerald-500/30 dark:text-emerald-300 font-semibold">
                 {step.harnixVerdict}
               </div>
             </div>
-            <p className="text-neutral-300 text-xs sm:text-sm font-normal max-w-3xl leading-relaxed">
+            <p className="text-neutral-600 dark:text-neutral-300 text-xs sm:text-sm font-normal max-w-3xl leading-relaxed">
               {step.description}
             </p>
           </div>
 
-          {/* Terminal Console Output */}
-          <div className="p-5 bg-[#090A0E] font-mono text-xs overflow-x-auto text-neutral-300 leading-relaxed max-h-[420px] overflow-y-auto">
-            <div className="text-neutral-400 text-[10px] pb-2 mb-3 border-b border-white/5 flex items-center justify-between select-none">
+          {/* Terminal Console Output (Always High-Contrast Dark Shell) */}
+          <div className="p-5 bg-[#090A0E] text-[#EDEDF2] font-mono text-xs overflow-x-auto leading-relaxed max-h-[420px] overflow-y-auto">
+            <div className="text-neutral-400 text-[10px] pb-2 mb-3 border-b border-white/10 flex items-center justify-between select-none font-bold">
               <span>SANDBOX STDOUT // LOG STREAM</span>
               <span>ISOLATED_CONTAINER_8F2A</span>
             </div>
@@ -309,23 +313,25 @@ export function InteractiveSimulator() {
           </div>
 
           {/* Bottom Bar: Quick Step Switcher */}
-          <div className="p-3 bg-neutral-900 border-t border-white/10 flex items-center justify-between font-mono text-xs">
+          <div className="p-3 bg-panel-subtle border-t border-panel-border flex items-center justify-between font-mono text-xs">
             <button
               onClick={() => setActiveStepIdx((prev) => Math.max(0, prev - 1))}
               disabled={activeStepIdx === 0}
-              className="px-3 py-1 rounded bg-neutral-800 hover:bg-neutral-700 disabled:opacity-30 disabled:hover:bg-neutral-800 text-neutral-300 transition-colors"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-panel hover:bg-neutral-200 dark:hover:bg-neutral-800 disabled:opacity-30 text-foreground border border-panel-border transition-colors cursor-pointer"
             >
-              &larr; Previous Step
+              <CaretLeft size={14} weight="bold" />
+              <span>Previous</span>
             </button>
-            <span className="text-neutral-400 text-[11px] hidden sm:block">
+            <span className="text-neutral-500 dark:text-neutral-400 text-[11px] hidden sm:block">
               All commands verified deterministic across pytest &amp; docker
             </span>
             <button
               onClick={() => setActiveStepIdx((prev) => Math.min(scenario.steps.length - 1, prev + 1))}
               disabled={activeStepIdx === scenario.steps.length - 1}
-              className="px-3 py-1 rounded bg-emerald-500 hover:bg-emerald-400 disabled:opacity-30 disabled:hover:bg-emerald-500 text-black font-semibold transition-colors"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-neutral-900 text-white dark:bg-emerald-500 dark:hover:bg-emerald-400 disabled:opacity-30 dark:text-black font-semibold transition-colors cursor-pointer"
             >
-              Next Step &rarr;
+              <span>Next</span>
+              <CaretRight size={14} weight="bold" />
             </button>
           </div>
 
