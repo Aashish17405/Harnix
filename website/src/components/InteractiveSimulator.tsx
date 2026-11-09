@@ -208,22 +208,22 @@ export function InteractiveSimulator() {
   };
 
   return (
-    <section id="inspector" className="py-20 bg-neutral-50 dark:bg-[#0E1017] border-b border-neutral-200 dark:border-white/10">
+    <section id="simulator" className="py-24 bg-background border-b border-panel-border transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10 pb-6 border-b border-neutral-200 dark:border-white/10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10 pb-6 border-b border-panel-border">
           <div>
             <div className="flex items-center gap-2 font-mono text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-2">
               <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              <span>03 // Live Systems Inspector</span>
+              <span>Interactive Trace Simulator</span>
             </div>
-            <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-neutral-900 dark:text-white">
-              Inspect how Harnix intercepts &amp; verifies.
+            <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground">
+              Step through a live verified run.
             </h2>
           </div>
           <p className="text-neutral-600 dark:text-neutral-400 font-mono text-xs max-w-md">
-            Interactive trace replay: Step through baseline checks, policy gates, Docker execution, and independent verification.
+            Click through a simulated task to see how Harnix runs baseline tests, enforces policies, and produces verified patches.
           </p>
         </div>
 
@@ -233,10 +233,10 @@ export function InteractiveSimulator() {
             <button
               key={sc.id}
               onClick={() => handleScenarioChange(idx)}
-              className={`px-4 py-2.5 rounded-lg text-xs font-mono transition-all border text-left cursor-pointer ${
+              className={`px-4 py-2.5 rounded-xl text-xs font-mono transition-all border text-left cursor-pointer ${
                 activeScenarioIdx === idx
-                  ? "bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white border-neutral-400 dark:border-neutral-500 font-bold shadow-sm"
-                  : "bg-neutral-100 dark:bg-neutral-900/60 text-neutral-600 dark:text-neutral-400 border-neutral-200 dark:border-white/5 hover:bg-white dark:hover:bg-neutral-800/60 hover:text-neutral-900 dark:hover:text-white"
+                  ? "bg-panel text-foreground border-emerald-500/50 font-bold shadow-xs ring-1 ring-emerald-500/20"
+                  : "bg-panel-subtle text-neutral-600 dark:text-neutral-400 border-panel-border hover:bg-panel hover:text-foreground"
               }`}
             >
               <div>{sc.label}</div>
@@ -246,17 +246,17 @@ export function InteractiveSimulator() {
         </div>
 
         {/* Main Inspector Console Box */}
-        <div className="sys-panel overflow-hidden border border-neutral-300 dark:border-neutral-700/80 shadow-lg">
+        <div className="sys-panel overflow-hidden border border-panel-border shadow-xl rounded-2xl bg-panel">
           
           {/* Top Bar with Step Indicators */}
-          <div className="p-4 bg-neutral-100 dark:bg-neutral-900 border-b border-neutral-200 dark:border-white/10 flex flex-wrap items-center justify-between gap-4">
+          <div className="p-4 bg-panel-subtle border-b border-panel-border flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <span className="font-mono text-xs font-bold text-neutral-900 dark:text-white uppercase">
+              <span className="font-mono text-xs font-bold text-foreground uppercase">
                 {scenario.label}
               </span>
-              <span className="text-neutral-400 dark:text-neutral-500 font-mono text-xs">•</span>
+              <span className="text-neutral-400 font-mono text-xs">•</span>
               <span className="font-mono text-xs text-neutral-600 dark:text-neutral-400">
-                TASK: <span className="text-neutral-900 dark:text-neutral-200 font-medium">{scenario.task}</span>
+                TASK: <span className="text-foreground font-medium">{scenario.task}</span>
               </span>
             </div>
 
@@ -269,10 +269,10 @@ export function InteractiveSimulator() {
                 <button
                   key={idx}
                   onClick={() => setActiveStepIdx(idx)}
-                  className={`w-6 h-6 rounded flex items-center justify-center font-mono text-xs transition-colors cursor-pointer ${
+                  className={`w-6 h-6 rounded-md flex items-center justify-center font-mono text-xs transition-colors cursor-pointer ${
                     activeStepIdx === idx
-                      ? "bg-neutral-900 text-white dark:bg-emerald-500 dark:text-black font-bold"
-                      : "bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-300 dark:hover:text-white"
+                      ? "bg-neutral-900 text-white dark:bg-emerald-500 dark:text-black font-bold shadow-xs"
+                      : "bg-panel border border-panel-border text-neutral-600 dark:text-neutral-400 hover:text-foreground"
                   }`}
                 >
                   {idx + 1}
@@ -282,17 +282,17 @@ export function InteractiveSimulator() {
           </div>
 
           {/* Step Detail Header */}
-          <div className="p-5 bg-white dark:bg-[#12151E] border-b border-neutral-200 dark:border-white/5 space-y-2">
+          <div className="p-5 bg-panel border-b border-panel-border space-y-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
-                <span className="sys-badge bg-neutral-100 text-neutral-700 border border-neutral-300 dark:bg-neutral-800 dark:text-neutral-300 dark:border-neutral-700">
+                <span className="sys-badge bg-panel-subtle text-neutral-700 dark:text-neutral-300 border border-panel-border">
                   {step.phase}
                 </span>
-                <h3 className="text-neutral-900 dark:text-white font-bold text-sm sm:text-base font-mono">
+                <h3 className="text-foreground font-bold text-sm sm:text-base font-mono">
                   {step.title}
                 </h3>
               </div>
-              <div className="font-mono text-xs px-2.5 py-1 rounded bg-emerald-50 text-emerald-800 border border-emerald-300 dark:bg-emerald-950/40 dark:border-emerald-500/30 dark:text-emerald-300 font-semibold">
+              <div className="font-mono text-xs px-2.5 py-1 rounded-md bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/20 font-semibold">
                 {step.harnixVerdict}
               </div>
             </div>

@@ -40,6 +40,27 @@
   --color-panel-border: var(--panel-border);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --animate-cell-ripple: cell-ripple var(--duration, 200ms) ease-out none 1 var(--delay, 0ms);
+}
+
+@keyframes cell-ripple {
+  0% {
+    background-color: #10B981 !important;
+    border-color: #059669 !important;
+    opacity: 1;
+  }
+  40% {
+    background-color: #34D399 !important;
+    border-color: #10B981 !important;
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.animate-cell-ripple {
+  animation: cell-ripple var(--duration, 200ms) ease-out none 1 var(--delay, 0ms);
 }
 
 html {

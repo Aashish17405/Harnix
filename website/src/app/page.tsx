@@ -1,9 +1,9 @@
 import { Navbar } from "@/components/Navbar";
 import { HeroSection } from "@/components/HeroSection";
-import { PillarsSection } from "@/components/PillarsSection";
+import { HowItWorksSection } from "@/components/HowItWorksSection";
 import { ComparisonMatrix } from "@/components/ComparisonMatrix";
 import { InteractiveSimulator } from "@/components/InteractiveSimulator";
-import { TriModalExperience } from "@/components/TriModalExperience";
+import { PillarsSection } from "@/components/PillarsSection";
 import { BenchmarkSection } from "@/components/BenchmarkSection";
 import { QuickstartSection } from "@/components/QuickstartSection";
 import { Footer } from "@/components/Footer";
@@ -16,10 +16,10 @@ export default function Home() {
       <Navbar />
       <main className="flex-1">
         <HeroSection />
-        <PillarsSection />
+        <HowItWorksSection />
         <ComparisonMatrix />
         <InteractiveSimulator />
-        <TriModalExperience />
+        <PillarsSection />
         <BenchmarkSection />
         <QuickstartSection />
       </main>

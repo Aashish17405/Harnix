@@ -29,7 +29,13 @@ export const metadata: Metadata = {
     "Autonomous Software Engineering",
   ],
   icons: {
-    icon: "/favicon.svg",
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
   },
 };
 
@@ -42,6 +48,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
+      data-theme="light"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
@@ -51,7 +58,7 @@ export default function RootLayout({
               (function() {
                 try {
                   var stored = localStorage.getItem('harnix-theme');
-                  var isDark = stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                  var isDark = stored === 'dark';
                   if (isDark) {
                     document.documentElement.classList.add('dark');
                     document.documentElement.setAttribute('data-theme', 'dark');
